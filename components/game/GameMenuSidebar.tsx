@@ -39,7 +39,7 @@ export const GameMenuSidebar = ({ isOpen, onClose, onNavClick, onSaveToFile, onN
         <>
             <div className={`game-menu-overlay ${isOpen ? 'open' : ''}`} onClick={onClose} />
             <aside className={`game-menu-sidebar ${isOpen ? 'open' : ''}`} aria-hidden={!isOpen}>
-                <nav>
+                <nav aria-label="Menu chính của game">
                     <ul className="sidebar-nav-list">
                         {menuItems.map(item => (
                             <li key={item.label} className="sidebar-nav-item">

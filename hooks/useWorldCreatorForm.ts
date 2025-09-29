@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import { useState, useEffect, useCallback, useRef } from 'react';
+import type React from 'react';
 import { useToasts } from '../components/contexts/ToastContext';
 import { hydrateWorldSettings } from '../utils/hydration';
 import { WC_FORM_DATA_KEY, INITIAL_WC_FORM_DATA, GENRE_SETTING_MAP, IDOL_MANAGER_LORE_RULES } from '../constants/gameConstants';

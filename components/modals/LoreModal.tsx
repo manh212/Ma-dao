@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { generateUniqueId } from '../../utils/id';
 import type { LoreRule } from '../../types';
 import './LoreModal.css';
@@ -21,6 +21,18 @@ export const LoreModal = ({ initialRules, onSave, onClose }: LoreModalProps) => 
         }));
     });
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose]);
 
     const handleAddRule = () => {
         setRules(prev => [...prev, { id: generateUniqueId('rule'), text: '', isActive: true }]);
@@ -98,9 +110,15 @@ export const LoreModal = ({ initialRules, onSave, onClose }: LoreModalProps) => 
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content lore-modal-content" onClick={e => e.stopPropagation()}>
+            <div 
+                className="modal-content lore-modal-content" 
+                onClick={e => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="lore-modal-title"
+            >
                 <header className="modal-header">
-                    <h3>Nạp Tri Thức & Quản Lý Luật Lệ</h3>
+                    <h3 id="lore-modal-title">Nạp Tri Thức & Quản Lý Luật Lệ</h3>
                     <button onClick={onClose} className="modal-close-button" aria-label="Đóng bảng luật lệ">X</button>
                 </header>
                 <div className="modal-body">

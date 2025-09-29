@@ -56,6 +56,18 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
     const [gameBgUrl, setGameBgUrl] = useState('');
 
     useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose]);
+
+    useEffect(() => {
         BackgroundManager.updateBackgrounds({
             setMenuBg: setMenuBgUrl,
             setGameBg: setGameBgUrl,
@@ -261,9 +273,15 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
     return (
         <>
             <div className="modal-overlay" onClick={onClose}>
-                <div className="modal-content settings-modal-content" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="modal-content settings-modal-content" 
+                    onClick={e => e.stopPropagation()}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="settings-modal-title"
+                >
                     <header className="modal-header">
-                        <h3>Cài Đặt</h3>
+                        <h3 id="settings-modal-title">Cài Đặt</h3>
                         <button onClick={onClose} className="modal-close-button" aria-label="Đóng bảng cài đặt">X</button>
                     </header>
                     <div className="settings-layout">

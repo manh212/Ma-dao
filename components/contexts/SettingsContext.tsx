@@ -30,7 +30,7 @@ const initialSettings: AppSettings = {
     enablePerformanceEffects: true,
 };
 
-export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
+export const SettingsProvider = ({ children }: { children?: React.ReactNode }) => {
     const [settings, setSettings] = useState<AppSettings>(() => {
         try {
             const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);

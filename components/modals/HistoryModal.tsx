@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { InlineStoryRenderer } from '../game/StoryRenderer';
 import { useGameContext } from '../contexts/GameContext';
 import type { Turn } from '../../types';
@@ -22,11 +22,29 @@ export const HistoryModal = ({ turns, onRevert, onClose, onEntityClick, onEntity
     const recentTurns = turns.slice(Math.max(0, turns.length - 20)).reverse();
     const latestTurnIndex = turns.length - 1;
 
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose]);
+
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content history-modal-content" onClick={e => e.stopPropagation()}>
+            <div 
+                className="modal-content history-modal-content" 
+                onClick={e => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="history-modal-title"
+            >
                 <header className="modal-header">
-                    <h3>Lịch Sử Lượt Chơi</h3>
+                    <h3 id="history-modal-title">Lịch Sử Lượt Chơi</h3>
                     <button onClick={onClose} className="modal-close-button" aria-label="Đóng">X</button>
                 </header>
                 <div className="modal-body">

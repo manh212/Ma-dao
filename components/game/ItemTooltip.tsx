@@ -64,11 +64,11 @@ export const ItemTooltip = ({ tooltipData }: ItemTooltipProps) => {
         }
     }, [tooltipData]);
     
-    if (!tooltipData) return <div ref={tooltipRef} className="entity-tooltip item-tooltip" style={style}></div>;
+    if (!tooltipData) return <div ref={tooltipRef} className="entity-tooltip item-tooltip" style={style} role="tooltip"></div>;
 
     const { item } = tooltipData;
     return (
-        <div ref={tooltipRef} className="entity-tooltip item-tooltip" style={style}>
+        <div ref={tooltipRef} className="entity-tooltip item-tooltip" style={style} role="tooltip">
             <div className="item-tooltip-header">
                 <span className={`entity-label entity-label-item`}>{item.type}</span>
                 <h4 className="tooltip-name">{item.name}</h4>

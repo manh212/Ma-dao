@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CHANGELOG_DATA } from '../../constants/changelogConstants';
 import type { ChangelogEntry } from '../../constants/changelogConstants';
 
@@ -24,31 +24,51 @@ const typeClasses: Record<ChangelogEntry['changes'][0]['type'], string> = {
   update: 'update',
 };
 
-export const ChangelogModal = ({ onClose }: ChangelogModalProps) => (
-  <div className="modal-overlay" onClick={onClose}>
-    <div className="modal-content changelog-modal-content" onClick={e => e.stopPropagation()}>
-      <header className="modal-header">
-        <h3>Nhật Ký Cập Nhật</h3>
-        <button onClick={onClose} className="modal-close-button" aria-label="Đóng">×</button>
-      </header>
-      <div className="modal-body">
-        {CHANGELOG_DATA.map(entry => (
-          <section key={entry.version} className="changelog-entry">
-            <header className="changelog-entry-header">
-              <h2>{entry.version}</h2>
-              <span>{entry.date}</span>
-            </header>
-            <ul className="changelog-list">
-              {entry.changes.map((change, index) => (
-                <li key={index} className="changelog-item">
-                  <span className={`change-type ${typeClasses[change.type]}`}>{typeLabels[change.type]}</span>
-                  <p className="change-description">{change.description}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
+export const ChangelogModal = ({ onClose }: ChangelogModalProps) => {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div 
+        className="modal-content changelog-modal-content" 
+        onClick={e => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="changelog-modal-title"
+      >
+        <header className="modal-header">
+          <h3 id="changelog-modal-title">Nhật Ký Cập Nhật</h3>
+          <button onClick={onClose} className="modal-close-button" aria-label="Đóng">×</button>
+        </header>
+        <div className="modal-body">
+          {CHANGELOG_DATA.map(entry => (
+            <section key={entry.version} className="changelog-entry">
+              <header className="changelog-entry-header">
+                <h2>{entry.version}</h2>
+                <span>{entry.date}</span>
+              </header>
+              <ul className="changelog-list">
+                {entry.changes.map((change, index) => (
+                  <li key={index} className="changelog-item">
+                    <span className={`change-type ${typeClasses[change.type]}`}>{typeLabels[change.type]}</span>
+                    <p className="change-description">{change.description}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};

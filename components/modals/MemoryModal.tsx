@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { InlineStoryRenderer } from '../game/StoryRenderer';
 import { useGameContext } from '../contexts/GameContext';
 import { ConfirmationModal } from './ConfirmationModal';
@@ -22,6 +22,18 @@ interface MemoryModalProps {
 export const MemoryModal = ({ memories, onPin, onDelete, onClose, onEntityClick, onEntityMouseEnter, onEntityMouseLeave }: MemoryModalProps) => {
     const { gameState } = useGameContext();
     const [memoryToDelete, setMemoryToDelete] = useState<string | null>(null);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose]);
 
     const sortedMemories = [...(memories || [])].sort((a, b) => {
         if (a.pinned && !b.pinned) return -1;
@@ -43,10 +55,16 @@ export const MemoryModal = ({ memories, onPin, onDelete, onClose, onEntityClick,
     return (
         <>
             <div className="modal-overlay" onClick={onClose}>
-                <div className="modal-content memory-modal-content" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="modal-content memory-modal-content" 
+                    onClick={e => e.stopPropagation()}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="memory-modal-title"
+                >
                     <header className="modal-header memory-header">
                         <div className="memory-title-wrapper">
-                            <h3>Ký Ức Tạm Thời</h3>
+                            <h3 id="memory-modal-title">Ký Ức Tạm Thời</h3>
                         </div>
                         <button onClick={onClose} className="modal-close-button" aria-label="Đóng bảng cài đặt">X</button>
                     </header>

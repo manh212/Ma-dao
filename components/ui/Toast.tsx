@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { ToastData } from '../../types';
 import './Toast.css';
 
@@ -10,7 +10,7 @@ interface ToastProps extends ToastData {
     onClose: () => void;
 }
 
-const Toast = ({ message, type, onClose }: ToastProps) => {
+const UnmemoizedToast = ({ message, type, onClose }: ToastProps) => {
     const [isFadingOut, setIsFadingOut] = useState(false);
 
     useEffect(() => {
@@ -34,6 +34,9 @@ const Toast = ({ message, type, onClose }: ToastProps) => {
         </div>
     );
 };
+
+// FIX: Wrap component in React.memo to address key prop error
+export const Toast = React.memo(UnmemoizedToast);
 
 
 interface ToastContainerProps {

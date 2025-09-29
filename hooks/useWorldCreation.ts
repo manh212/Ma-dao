@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import { useState, useRef, useEffect, useCallback } from 'react';
+import type React from 'react';
 import { ApiKeyManager } from '../services/ApiKeyManager';
 import { getApiErrorMessage } from '../utils/error';
 import { generateUniqueId } from '../utils/id';

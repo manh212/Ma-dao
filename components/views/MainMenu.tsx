@@ -111,7 +111,7 @@ export const MainMenu = ({ onNavigate, onOpenApiKeyModal, onOpenSettingsModal, o
                 <button className="main-menu-button" onClick={onOpenApiKeyModal} style={{'--i': 4} as React.CSSProperties}>Thiết Lập API Key</button>
                 <button className="main-menu-button" onClick={onOpenChangelogModal} style={{'--i': 5} as React.CSSProperties}>Cập Nhật</button>
             </nav>
-            <p className="main-menu-api-status">{apiStatus}</p>
+            <div role="status" className="main-menu-api-status">{apiStatus}</div>
         </div>
     );
 };

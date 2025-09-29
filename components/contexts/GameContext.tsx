@@ -1,4 +1,5 @@
 
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -637,7 +638,7 @@ interface GameContextType {
 
 const GameContext = createContext<GameContextType>(null!);
 
-export const GameProvider = ({ children }: { children: ReactNode }) => {
+export const GameProvider = ({ children }: { children?: ReactNode }) => {
     const [state, dispatch] = useReducer(gameReducer, initialState);
     return (
         <GameContext.Provider value={{ gameState: state.gameState, worldSettings: state.worldSettings, dispatch }}>

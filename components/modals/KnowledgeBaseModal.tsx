@@ -33,6 +33,18 @@ export const KnowledgeBaseModal = ({ onClose, onEntityClick, onEntityMouseEnter,
     const { knowledgeBase } = gameState;
 
     useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose]);
+
+    useEffect(() => {
         if (editingItemId && editInputRef.current) {
             editInputRef.current.focus();
             editInputRef.current.select();
@@ -48,7 +60,7 @@ export const KnowledgeBaseModal = ({ onClose, onEntityClick, onEntityMouseEnter,
         setExpandedId(prev => (prev === id ? null : id));
     };
 
-    const handleEditClick = (e: React.MouseEvent, item: GameCharacter | KnowledgeEntity) => {
+    const handleEditClick = (e: React.MouseEvent | React.KeyboardEvent, item: GameCharacter | KnowledgeEntity) => {
         e.stopPropagation();
         setEditingItemId(item.id);
         setEditableName((item as GameCharacter).displayName);
@@ -72,7 +84,7 @@ export const KnowledgeBaseModal = ({ onClose, onEntityClick, onEntityMouseEnter,
         const isEditing = editingItemId === item.id;
         return (
             <li key={item.id} className={`kb-item ${expandedId === item.id ? 'expanded' : ''}`}>
-                <header className="kb-item-header" onClick={() => handleToggle(item.id)}>
+                <header className="kb-item-header" onClick={() => handleToggle(item.id)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleToggle(item.id)} role="button" tabIndex={0}>
                     <div className="kb-item-name">
                         {isEditing ? (
                             <input
@@ -92,7 +104,7 @@ export const KnowledgeBaseModal = ({ onClose, onEntityClick, onEntityMouseEnter,
                             <>
                                 <span>{item.displayName}</span>
                                 <div className="kb-item-actions">
-                                    <button className="edit-name-button" title="Đổi tên" onClick={(e) => handleEditClick(e, item)}>✏️</button>
+                                    <button className="edit-name-button" title="Đổi tên" onClick={(e) => handleEditClick(e, item)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleEditClick(e, item)}>✏️</button>
                                 </div>
                             </>
                         )}
@@ -118,7 +130,7 @@ export const KnowledgeBaseModal = ({ onClose, onEntityClick, onEntityMouseEnter,
     const renderNpcItem = (npc: GameCharacter) => {
         const relInfo = getRelationshipInfo(npc.relationship);
         return (
-            <div key={npc.id} className={`npc-card ${npc.deathState?.isDead ? 'deceased' : ''}`} onClick={() => onNpcSelect(npc.id)}>
+            <div key={npc.id} className={`npc-card ${npc.deathState?.isDead ? 'deceased' : ''}`} onClick={() => onNpcSelect(npc.id)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onNpcSelect(npc.id)} role="button" tabIndex={0} aria-label={`Xem hồ sơ của ${npc.displayName}`}>
                 <div className="npc-card-avatar">
                     {npc.avatarUrl ? (
                         <img src={npc.avatarUrl} alt={npc.displayName} />
@@ -217,9 +229,15 @@ export const KnowledgeBaseModal = ({ onClose, onEntityClick, onEntityMouseEnter,
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content kb-modal-content" onClick={e => e.stopPropagation()}>
+            <div 
+                className="modal-content kb-modal-content" 
+                onClick={e => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="kb-modal-title"
+            >
                 <header className="modal-header">
-                    <h3>Tri Thức Thế Giới</h3>
+                    <h3 id="kb-modal-title">Tri Thức Thế Giới</h3>
                     <button onClick={onClose} className="modal-close-button" aria-label="Đóng bảng Tri thức">X</button>
                 </header>
                 <div className="modal-body">

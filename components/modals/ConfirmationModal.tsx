@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React from 'react';
+import React, { useEffect } from 'react';
 import './ConfirmationModal.css';
 
 interface ConfirmationModalProps {
@@ -24,6 +24,23 @@ export const ConfirmationModal = ({
     confirmText = 'Xác nhận',
     cancelText = 'Hủy'
 }: ConfirmationModalProps) => {
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isOpen, onClose]);
+
+
     if (!isOpen) return null;
 
     const handleConfirm = () => {
@@ -31,11 +48,19 @@ export const ConfirmationModal = ({
         onClose();
     }
 
+    const modalId = React.useId();
+
     return (
         <div className="modal-overlay confirmation-overlay" onClick={onClose}>
-            <div className="modal-content confirmation-modal-content" onClick={e => e.stopPropagation()}>
+            <div 
+                className="modal-content confirmation-modal-content" 
+                onClick={e => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={`${modalId}-title`}
+            >
                 <header className="modal-header">
-                    <h3>{title}</h3>
+                    <h3 id={`${modalId}-title`}>{title}</h3>
                     <button onClick={onClose} className="modal-close-button" aria-label="Đóng">X</button>
                 </header>
                 <div className="modal-body">

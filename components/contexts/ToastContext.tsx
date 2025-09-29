@@ -13,7 +13,7 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
-export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
+export const ToastProvider = ({ children }: { children?: React.ReactNode }) => {
     const [toasts, setToasts] = useState<ToastData[]>([]);
 
     const addToast = useCallback((message: string, type: ToastData['type'] = 'info') => {
@@ -28,7 +28,9 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     return (
         <ToastContext.Provider value={{ addToast }}>
             {children}
-            <ToastContainerComponent toasts={toasts} onRemove={removeToast} />
+            <div role="alert">
+                <ToastContainerComponent toasts={toasts} onRemove={removeToast} />
+            </div>
         </ToastContext.Provider>
     );
 };

@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ConfirmationModal } from './ConfirmationModal';
 import { formatBytes } from '../../utils/game';
 import type { SaveFile } from '../../types';
@@ -21,6 +21,18 @@ export const LoadGameModal = ({ saves, onClose, onLoad, onDelete, onUpload, onDo
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [saveToDelete, setSaveToDelete] = useState<{ id: string; name: string } | null>(null);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose]);
 
     const handleDeleteClick = (saveId: string, saveName: string) => {
         setSaveToDelete({ id: saveId, name: saveName });
@@ -51,7 +63,7 @@ export const LoadGameModal = ({ saves, onClose, onLoad, onDelete, onUpload, onDo
     };
 
     const renderSaveCard = (save: SaveFile) => (
-        <div key={save.id} className="save-card">
+        <div key={save.id} className="save-card" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onLoad(save); }}>
             <div className="save-card-content">
                 {save.slotNumber && <span className="save-card-slot">Slot {save.slotNumber}</span>}
                 <h5 className="save-card-name">{save.name}</h5>
@@ -73,7 +85,13 @@ export const LoadGameModal = ({ saves, onClose, onLoad, onDelete, onUpload, onDo
     return (
         <>
             <div className="modal-overlay" onClick={onClose}>
-                <div className="modal-content load-game-modal" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="modal-content load-game-modal" 
+                    onClick={e => e.stopPropagation()}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="load-game-title"
+                >
                     <input 
                         type="file" 
                         ref={fileInputRef} 
@@ -83,7 +101,7 @@ export const LoadGameModal = ({ saves, onClose, onLoad, onDelete, onUpload, onDo
                         multiple 
                     />
                     <header className="load-game-header">
-                        <h3 className="load-game-title">Quản Lý & Tải Game</h3>
+                        <h3 id="load-game-title" className="load-game-title">Quản Lý & Tải Game</h3>
                         <div className="load-game-header-actions">
                              <button onClick={handleUploadClick} className="load-game-upload-button">
                                 Tải Lên Tệp (.zip)

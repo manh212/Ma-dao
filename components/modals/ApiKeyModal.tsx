@@ -43,6 +43,18 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
     const [keyStatuses, setKeyStatuses] = useState<Map<string, KeyStatusInfo>>(new Map());
     const [isChecking, setIsChecking] = useState(false);
     const [visibleKeys, setVisibleKeys] = useState(new Set<string>());
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                handleCloseAndSave();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose]);
     
     useEffect(() => {
         let parsedConfigs: Omit<ApiConfig, 'id'>[] = [];
@@ -192,9 +204,15 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
 
     return (
         <div className="modal-overlay" onClick={handleCloseAndSave}>
-            <div className="modal-content api-key-modal" onClick={e => e.stopPropagation()}>
+            <div 
+                className="modal-content api-key-modal" 
+                onClick={e => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="api-key-modal-title"
+            >
                 <header className="modal-header">
-                    <h3>Thiết lập API Key Gemini</h3>
+                    <h3 id="api-key-modal-title">Thiết lập API Key Gemini</h3>
                     <button onClick={handleCloseAndSave} className="modal-close-button" aria-label="Đóng">×</button>
                 </header>
                 <div className="modal-body api-key-modal-body">
@@ -226,12 +244,13 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
                                             onFocus={() => setFocusedIndex(index)}
                                             onBlur={() => setFocusedIndex(null)}
                                             placeholder="Dán API Key Gemini của bạn tại đây..."
+                                            aria-label={`Khóa API ${index + 1}`}
                                         />
                                         <button
                                             type="button"
                                             className="api-key-visibility-btn"
                                             onClick={() => toggleKeyVisibility(config.id)}
-                                            aria-label={visibleKeys.has(config.id) ? 'Ẩn khóa API' : 'Hiện khóa API'}
+                                            aria-label={visibleKeys.has(config.id) ? `Ẩn khóa API ${index + 1}` : `Hiện khóa API ${index + 1}`}
                                         >
                                             {visibleKeys.has(config.id) ? <EyeSlashIcon /> : <EyeIcon />}
                                         </button>

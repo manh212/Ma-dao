@@ -45,9 +45,12 @@ const EquipmentSlotDisplay = ({ slot, item, onUnequip, isGlowing, onMouseEnter, 
     <div
         className={`equipment-slot slot-${slot.toLowerCase().replace(' ', '-')} ${isGlowing ? 'glowing' : ''}`}
         onClick={() => item && onUnequip(slot)}
+        onKeyDown={(e) => { if (item && (e.key === 'Enter' || e.key === ' ')) onUnequip(slot); }}
         onMouseEnter={(e) => item && onMouseEnter(e, item)}
         onMouseLeave={onMouseLeave}
-        title={item ? `Tháo: ${item.name}` : ``}
+        role="button"
+        tabIndex={0}
+        aria-label={item ? `Tháo ${item.name} khỏi ô ${slot}` : `Ô trống: ${slot}`}
     >
         {item ? (
             <div className="equipped-item-display">
@@ -130,9 +133,11 @@ export const EquipmentSidePanel = ({ character, isPlayerCharacter, onClose }: Eq
                     {isEditingName ? (
                         <input ref={nameInputRef} type="text" className="entity-name-input" value={editableName} onChange={(e) => setEditableName(e.target.value)} onBlur={handleNameSave} onKeyDown={(e) => e.key === 'Enter' && handleNameSave()} />
                     ) : (
-                        <h2 className="dossier-name" onClick={() => setIsEditingName(true)}>
-                            {character.displayName}
-                            <span className="dossier-edit-icon">✏️</span>
+                        <h2 className="dossier-name">
+                            <button onClick={() => setIsEditingName(true)} className="name-edit-button" aria-label={`Sửa tên ${character.displayName}`}>
+                                {character.displayName}
+                                <span className="dossier-edit-icon">✏️</span>
+                            </button>
                         </h2>
                     )}
                     <p className="dossier-title">{character.title || character.species}</p>

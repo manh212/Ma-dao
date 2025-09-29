@@ -14,7 +14,7 @@ const LockIcon = () => (
 
 interface CollapsibleSectionProps {
     title: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     isOpen: boolean;
     onToggle: () => void;
     isLocked?: boolean;
@@ -28,7 +28,7 @@ export const CollapsibleSection = ({ title, children, isOpen, onToggle, isLocked
             onClick={onToggle} 
             role="button" 
             tabIndex={0} 
-            onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && onToggle()}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onToggle()}
             aria-expanded={isOpen}
             aria-disabled={isLocked}
             title={isLocked ? lockMessage : `Mở/Đóng mục ${title}`}

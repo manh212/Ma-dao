@@ -24,7 +24,7 @@ const translateQuestStatus = (status: Quest['status']): string => {
     }
 };
 
-const QuestItem = ({ quest, onEntityClick, onEntityMouseEnter, onEntityMouseLeave }: QuestItemProps) => {
+const QuestItem = React.memo(({ quest, onEntityClick, onEntityMouseEnter, onEntityMouseLeave }: QuestItemProps) => {
     const { gameState } = useGameContext();
     const [isExpanded, setIsExpanded] = useState(quest.status === 'Ongoing');
     
@@ -67,7 +67,7 @@ const QuestItem = ({ quest, onEntityClick, onEntityMouseEnter, onEntityMouseLeav
             </div>
         </li>
     );
-};
+});
 
 interface QuestsTabProps {
     onEntityClick: (event: React.MouseEvent, name: string, type: string) => void;

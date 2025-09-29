@@ -25,6 +25,18 @@ export const AvatarEditModal = ({ character, onClose, onSave, addToast }: Avatar
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose]);
+
+    useEffect(() => {
         const loadGallery = async () => {
             setIsLoadingGallery(true);
             try {
@@ -78,9 +90,15 @@ export const AvatarEditModal = ({ character, onClose, onSave, addToast }: Avatar
 
     return (
         <div className="modal-overlay confirmation-overlay" onClick={onClose}>
-            <div className="modal-content avatar-edit-modal" onClick={e => e.stopPropagation()}>
+            <div 
+                className="modal-content avatar-edit-modal" 
+                onClick={e => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="avatar-edit-title"
+            >
                 <header className="modal-header">
-                    <h3>Chọn Ảnh Đại Diện</h3>
+                    <h3 id="avatar-edit-title">Chọn Ảnh Đại Diện</h3>
                     <button onClick={onClose} className="modal-close-button" aria-label="Đóng">×</button>
                 </header>
                 <div className="modal-body">

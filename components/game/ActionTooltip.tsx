@@ -68,12 +68,12 @@ export const ActionTooltip = ({ tooltipData, onEntityClick, onEntityMouseEnter, 
         }
     }, [tooltipData]);
 
-    if (!tooltipData) return <div ref={tooltipRef} className="action-tooltip" style={style}></div>;
+    if (!tooltipData) return <div ref={tooltipRef} className="action-tooltip" style={style} role="tooltip"></div>;
 
     const { action } = tooltipData;
 
     return (
-        <div ref={tooltipRef} className="action-tooltip" style={style}>
+        <div ref={tooltipRef} className="action-tooltip" style={style} role="tooltip">
             {action.benefit && (
                 <div className="action-tooltip-section benefit">
                     <h6 className="action-tooltip-title">Lợi Ích Tiềm Năng</h6>

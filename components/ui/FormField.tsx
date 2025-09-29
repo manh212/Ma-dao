@@ -6,7 +6,7 @@ import React from 'react';
 
 interface FormFieldProps {
     label: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     htmlFor: string;
 }
 

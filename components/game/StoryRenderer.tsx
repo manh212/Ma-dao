@@ -78,7 +78,8 @@ const UnmemoizedInlineStoryRenderer = ({ text, gameState, onEntityClick, onEntit
                         {title}
                         <span 
                             className={`entity entity-${type.toLowerCase()}`} 
-                            onClick={(e) => onEntityClick(e, entity.id, type)} 
+                            onClick={(e) => onEntityClick(e as any, entity.id, type)} 
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onEntityClick(e as any, entity.id, type); }}
                             onMouseEnter={(e) => onEntityMouseEnter(e, entity.id, type)} 
                             onMouseLeave={onEntityMouseLeave} 
                             role="button" 

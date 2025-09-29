@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import JSZip from 'jszip';
+import type React from 'react';
 import { removeAccents } from './text';
 import * as db from '../services/db';
 import type { SaveFile } from '../types';

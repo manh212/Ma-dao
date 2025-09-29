@@ -49,7 +49,7 @@ export const GameBody = React.forwardRef<HTMLDivElement, GameBodyProps>(({
     const showIntroElements = turns.length === 1 && turns[0].chosenAction === null;
 
     return (
-        <main className="game-body" ref={ref}>
+        <main className="game-body" ref={ref} aria-live="polite" aria-atomic="false">
             {showIntroElements && worldSummary && (
                 <div className="world-summary-container">
                     <h3>Bối Cảnh Thế Giới</h3>

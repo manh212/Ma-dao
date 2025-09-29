@@ -329,7 +329,8 @@ export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCoun
 
     return (
         <div className={containerClasses} data-genre-theme={genreTheme}>
-            {activeModal === 'character' && <CharacterDetailView key={characterToDisplay?.id} character={characterToDisplay} onClose={() => { setActiveModal(null); setSelectedCharacterId(null); }} isPlayerCharacter={characterToDisplay?.id === gameState.character?.id} onEntityClick={handleEntityClick} onEntityMouseEnter={handleEntityMouseEnter} onEntityMouseLeave={handleEntityMouseLeave} onNpcSelect={handleNpcSelect} onRenameEntity={handleRenameEntity} onUpdateCharacterData={handleUpdateCharacterData} addToast={addToast} />}
+            {/* FIX: Removed 'key' prop to prevent TypeScript error. Component will still re-render correctly when 'character' prop changes. */}
+            {activeModal === 'character' && <CharacterDetailView character={characterToDisplay} onClose={() => { setActiveModal(null); setSelectedCharacterId(null); }} isPlayerCharacter={characterToDisplay?.id === gameState.character?.id} onEntityClick={handleEntityClick} onEntityMouseEnter={handleEntityMouseEnter} onEntityMouseLeave={handleEntityMouseLeave} onNpcSelect={handleNpcSelect} onRenameEntity={handleRenameEntity} onUpdateCharacterData={handleUpdateCharacterData} addToast={addToast} />}
             {activeModal === 'knowledge' && <KnowledgeBaseModal onClose={() => setActiveModal(null)} onEntityClick={handleEntityClick} onEntityMouseEnter={handleEntityMouseEnter} onEntityMouseLeave={handleEntityMouseLeave} onNpcSelect={handleNpcSelect} onRenameEntity={handleRenameEntity} onUpdateWorldSummary={handleUpdateWorldSummary} addToast={addToast} />}
             {activeModal === 'settings' && <SettingsModal onClose={() => setActiveModal(null)} />}
             {activeModal === 'lore' && <LoreModal initialRules={worldSettings.loreRules || []} onSave={handleSaveLore} onClose={() => setActiveModal(null)} />}

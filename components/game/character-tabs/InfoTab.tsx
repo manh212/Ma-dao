@@ -19,7 +19,7 @@ interface InfoTabProps {
     addToast: (message: string, type?: 'info' | 'success' | 'error' | 'warning') => void;
 }
 
-const InfoSection = ({ title, children, hasData, className = '' }: { title: string, children: React.ReactNode, hasData: boolean, className?: string }) => {
+const InfoSection = ({ title, children, hasData, className = '' }: { title: string, children?: React.ReactNode, hasData: boolean, className?: string }) => {
     if (!hasData) return null;
     return (
         <div className={`char-detail-section info-subsection ${className}`}>
