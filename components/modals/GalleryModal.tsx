@@ -460,8 +460,8 @@ ${JSON.stringify(imageMetadata.slice(0, 200))}
         setIsProcessingAvatars(false);
     };
 
-    // FIX: Add explicit string types to the sort callback arguments to resolve `localeCompare` error on `unknown`.
-    const sortedCategories = Array.from(categories.keys()).sort((a: string, b: string) => a.localeCompare(b, 'vi'));
+    // FIX: Cast the result of `Array.from` to `string[]` to resolve the sort callback type error where parameters were inferred as 'unknown'.
+    const sortedCategories = (Array.from(categories.keys()) as string[]).sort((a, b) => a.localeCompare(b, 'vi'));
 
     return (
         <>

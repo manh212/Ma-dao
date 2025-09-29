@@ -5,6 +5,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as db from '../../services/db';
 import { sanitizeTextForClassName } from '../../utils/text';
+import { CHANGELOG_DATA } from '../../constants/changelogConstants';
 import './MainMenu.css';
 
 interface MainMenuProps {
@@ -57,6 +58,7 @@ const GENRE_QUOTES: Record<string, string[]> = {
 export const MainMenu = ({ onNavigate, onOpenApiKeyModal, onOpenSettingsModal, onOpenChangelogModal, apiStatus }: MainMenuProps) => {
     const [dynamicTitle, setDynamicTitle] = useState('Hãy cố gắng cho tương lai tốt hơn');
     const [lastGenre, setLastGenre] = useState('default');
+    const currentVersion = CHANGELOG_DATA[0]?.version;
 
     useEffect(() => {
         const fetchLastGenreAndSetTitle = async () => {
@@ -92,9 +94,12 @@ export const MainMenu = ({ onNavigate, onOpenApiKeyModal, onOpenSettingsModal, o
                 <button className="main-menu-button" onClick={() => onNavigate('load')} style={{'--i': 2} as React.CSSProperties}>Quản Lý & Tải Game</button>
                 <button className="main-menu-button" onClick={onOpenSettingsModal} style={{'--i': 3} as React.CSSProperties}>Cài Đặt</button>
                 <button className="main-menu-button" onClick={onOpenApiKeyModal} style={{'--i': 4} as React.CSSProperties}>Thiết Lập API Key</button>
-                <button className="main-menu-button" onClick={onOpenChangelogModal} style={{'--i': 5} as React.CSSProperties}>Cập Nhật</button>
+                <button className="main-menu-button" onClick={onOpenChangelogModal} style={{'--i': 5} as React.CSSProperties}>Những Tính Năng Mới</button>
             </nav>
-            <div role="status" className="main-menu-api-status">{apiStatus}</div>
+            <div className="main-menu-footer">
+                <div role="status" className="main-menu-api-status">{apiStatus}</div>
+                {currentVersion && <div className="main-menu-version">Phiên bản {currentVersion}</div>}
+            </div>
         </div>
     );
 };

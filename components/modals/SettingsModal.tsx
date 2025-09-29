@@ -29,7 +29,7 @@ const WorldIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 
 const BackgroundIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>;
 const PlaceholderIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>;
 
-const BackgroundCard = ({ title, previewUrl, onSet, onClear }: { title: string; previewUrl: string; onSet: () => void; onClear: () => void; }) => (
+const BackgroundCard = ({ title, previewUrl, onSet, onClear, setLabel, clearLabel }: { title: string; previewUrl: string; onSet: () => void; onClear: () => void; setLabel: string; clearLabel: string; }) => (
     <div className="background-card">
         <div className="background-preview">
             {previewUrl ? <img src={previewUrl} alt={`${title} preview`} /> : <div className="background-placeholder"><PlaceholderIcon/></div>}
@@ -37,8 +37,8 @@ const BackgroundCard = ({ title, previewUrl, onSet, onClear }: { title: string; 
         <div className="background-info">
             <h5>{title}</h5>
             <div className="background-actions">
-                <button className="wc-button" onClick={onSet}>Thay Đổi</button>
-                <button className="wc-button button-clear" onClick={onClear} disabled={!previewUrl}>Xóa</button>
+                <button className="wc-button" onClick={onSet} aria-label={setLabel}>Thay Đổi</button>
+                <button className="wc-button button-clear" onClick={onClear} disabled={!previewUrl} aria-label={clearLabel}>Xóa</button>
             </div>
         </div>
     </div>
@@ -265,8 +265,22 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
                         <h4>Tùy Chỉnh Ảnh Nền</h4>
                         <input type="file" ref={backgroundInputRef} onChange={handleBackgroundFileChange} style={{ display: 'none' }} accept="image/png, image/jpeg, image/webp" />
                         <div className="background-cards-container">
-                            <BackgroundCard title="Ảnh Nền Menu Chính" previewUrl={menuBgUrl} onSet={() => handleSetBackgroundClick('menu')} onClear={handleClearMenuBackground} />
-                            <BackgroundCard title="Ảnh Nền Trong Game" previewUrl={gameBgUrl} onSet={() => handleSetBackgroundClick('game')} onClear={handleClearGameBackground} />
+                            <BackgroundCard 
+                                title="Ảnh Nền Menu Chính" 
+                                previewUrl={menuBgUrl} 
+                                onSet={() => handleSetBackgroundClick('menu')} 
+                                onClear={handleClearMenuBackground}
+                                setLabel="Thay đổi ảnh nền menu chính"
+                                clearLabel="Xóa ảnh nền menu chính"
+                            />
+                            <BackgroundCard 
+                                title="Ảnh Nền Trong Game" 
+                                previewUrl={gameBgUrl} 
+                                onSet={() => handleSetBackgroundClick('game')} 
+                                onClear={handleClearGameBackground}
+                                setLabel="Thay đổi ảnh nền trong game"
+                                clearLabel="Xóa ảnh nền trong game"
+                            />
                         </div>
                     </div>
                 );
@@ -290,11 +304,11 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
                         <button onClick={onClose} className="modal-close-button" aria-label="Đóng bảng cài đặt">X</button>
                     </header>
                     <div className="settings-layout">
-                        <nav className="settings-sidebar">
-                            <button className={`settings-nav-button ${activeTab === 'appearance' ? 'active' : ''}`} onClick={() => setActiveTab('appearance')}><AppearanceIcon/> <span>Giao Diện</span></button>
-                            <button className={`settings-nav-button ${activeTab === 'experience' ? 'active' : ''}`} onClick={() => setActiveTab('experience')}><ExperienceIcon/> <span>Trải Nghiệm</span></button>
-                            {gameState && <button className={`settings-nav-button ${activeTab === 'world' ? 'active' : ''}`} onClick={() => setActiveTab('world')}><WorldIcon/> <span>Thế Giới</span></button>}
-                            <button className={`settings-nav-button ${activeTab === 'background' ? 'active' : ''}`} onClick={() => setActiveTab('background')}><BackgroundIcon/> <span>Ảnh Nền</span></button>
+                        <nav className="settings-sidebar" aria-label="Menu cài đặt">
+                            <button aria-label="Cài đặt Giao diện" className={`settings-nav-button ${activeTab === 'appearance' ? 'active' : ''}`} onClick={() => setActiveTab('appearance')}><AppearanceIcon/> <span>Giao Diện</span></button>
+                            <button aria-label="Cài đặt Trải nghiệm" className={`settings-nav-button ${activeTab === 'experience' ? 'active' : ''}`} onClick={() => setActiveTab('experience')}><ExperienceIcon/> <span>Trải Nghiệm</span></button>
+                            {gameState && <button aria-label="Cài đặt Thế giới" className={`settings-nav-button ${activeTab === 'world' ? 'active' : ''}`} onClick={() => setActiveTab('world')}><WorldIcon/> <span>Thế Giới</span></button>}
+                            <button aria-label="Cài đặt Ảnh nền" className={`settings-nav-button ${activeTab === 'background' ? 'active' : ''}`} onClick={() => setActiveTab('background')}><BackgroundIcon/> <span>Ảnh Nền</span></button>
                         </nav>
                         <main className="settings-content">
                             {renderPanel()}

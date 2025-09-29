@@ -58,13 +58,27 @@
     box-shadow: none;
 }
 
-.main-menu-api-status {
+.main-menu-footer {
     position: absolute;
-    bottom: var(--space-6);
+    bottom: var(--space-4);
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.main-menu-api-status {
     color: var(--text-muted);
     font-size: var(--font-size-sm);
-    z-index: 2;
-    animation: none;
+}
+
+.main-menu-version {
+    color: var(--text-muted);
+    font-size: var(--font-size-xs);
+    opacity: 0.8;
 }
 
 /* --- THEME OVERRIDES --- */
