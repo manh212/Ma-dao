@@ -27,21 +27,21 @@ import type { WorldSettings, GameState, LoreRule, Skill, Character as CharType, 
 import { TalentType } from '../../types';
 
 const GENRE_DETAILS: { [key: string]: { description: string; icon: React.ReactNode } } = {
-    'Marvel': { description: "Bước vào vũ trụ của các siêu anh hùng và ác nhân, nơi công nghệ, đột biến và phép thuật định hình nên số phận.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg> },
-    'Quản lý Nhóm nhạc': { description: "Đứng sau ánh đèn sân khấu, quản lý lịch trình, đối mặt scandal và dẫn dắt một nhóm nhạc đến đỉnh cao danh vọng.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> },
-    'Đồng nhân': { description: "Viết lại một câu chuyện quen thuộc. Thay đổi số phận của các nhân vật bạn yêu thích hoặc tạo ra một nhân vật hoàn toàn mới.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg> },
-    'Dị Giới Fantasy': { description: "Một thế giới của kiếm, ma thuật và những sinh vật huyền bí. Chuyển sinh, được triệu hồi hay là một người bản địa.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m14.5 3.5-1.2 1.2c-.3.3-.3.8 0 1.1l1.6 1.6c.3.3.8.3 1.1 0l1.2-1.2c1-1 1-2.5 0-3.5s-2.5-1-3.5 0Z"/><path d="m11.5 6.5-1.2 1.2c-.3.3-.3.8 0 1.1l1.6 1.6c.3.3.8.3 1.1 0l1.2-1.2c1-1 1-2.5 0-3.5s-2.5-1-3.5 0Z"/><path d="m8.5 9.5-1.2 1.2c-.3.3-.3.8 0 1.1l1.6 1.6c.3.3.8.3 1.1 0l1.2-1.2c1-1 1-2.5 0-3.5s-2.5-1-3.5 0Z"/><path d="m18 13-1.5-1.5M15 16l-1.5-1.5"/><path d="m22 2-3 1 1 4-2 2-3-1-1 4-4-1-1 4 4 1 2-2 4 1 1-3 1-3Z"/></svg> },
-    'Thế Giới Giả Tưởng (Game/Tiểu Thuyết)': { description: "Bước vào một thế giới đã được xây dựng sẵn từ game hoặc tiểu thuyết, trở thành nhân vật chính hoặc một tồn tại mới.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 12a9.5 9.5 0 1 1-9.5-9.5A9.5 9.5 0 0 1 21.5 12Z"/><path d="M12 2v10l6 3"/><path d="M12 22v-10l-6 3"/></svg> },
-    'Tu Tiên': { description: "Vấn đạo trường sinh, nghịch thiên cải mệnh trong một thế giới của linh khí, công pháp và pháp bảo.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg> },
-    'Võ Lâm': { description: "Ân oán giang hồ, tranh đoạt bí kíp, trở thành đại hiệp hoặc ma đầu trong một thế giới võ học Trung Hoa.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 17.5 18 14l-5-5-5 5 3.5 3.5M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/></svg> },
-    'Thời Chiến (Trung Hoa/Nhật Bản)': { description: "Sống sót và tạo dựng danh tiếng trong thời kỳ chiến quốc loạn lạc của Trung Hoa hoặc Nhật Bản.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 17.5 18 14l-5-5-5 5 3.5 3.5M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/></svg> },
-    'Đô Thị Hiện Đại': { description: "Những câu chuyện về tình yêu, quyền lực, và các thế lực siêu nhiên ẩn mình dưới ánh đèn neon của thành phố.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="8" y="2" rx="1"/></svg> },
-    'Đô Thị Hiện Đại 100% bình thường': { description: "Không có siêu năng lực, không có hệ thống. Chỉ là những câu chuyện đời thường về tình yêu, công việc và cuộc sống.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="8" y="2" rx="1"/></svg> },
-    'Hậu Tận Thế': { description: "Sinh tồn trong một thế giới hoang tàn sau thảm họa, đối mặt với quái vật, tài nguyên khan hiếm và những người sống sót khác.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="m14.5 17.5-5-5L14.5 7.5l5 5L14.5 17.5Z"/></svg> },
-    'Huyền Huyễn Truyền Thuyết': { description: "Khi những truyền thuyết về thần, ma, và các sinh vật cổ xưa trở thành hiện thực. Một thế giới của sức mạnh phi thường.", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 17.5 18 14l-5-5-5 5 3.5 3.5M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/></svg> },
+    'Marvel': { description: "Bước vào vũ trụ của các siêu anh hùng và ác nhân, nơi công nghệ, đột biến và phép thuật định hình nên số phận.", icon: null },
+    'Quản lý Nhóm nhạc': { description: "Đứng sau ánh đèn sân khấu, quản lý lịch trình, đối mặt scandal và dẫn dắt một nhóm nhạc đến đỉnh cao danh vọng.", icon: null },
+    'Đồng nhân': { description: "Viết lại một câu chuyện quen thuộc. Thay đổi số phận của các nhân vật bạn yêu thích hoặc tạo ra một nhân vật hoàn toàn mới.", icon: null },
+    'Dị Giới Fantasy': { description: "Một thế giới của kiếm, ma thuật và những sinh vật huyền bí. Chuyển sinh, được triệu hồi hay là một người bản địa.", icon: null },
+    'Thế Giới Giả Tưởng (Game/Tiểu Thuyết)': { description: "Bước vào một thế giới đã được xây dựng sẵn từ game hoặc tiểu thuyết, trở thành nhân vật chính hoặc một tồn tại mới.", icon: null },
+    'Tu Tiên': { description: "Vấn đạo trường sinh, nghịch thiên cải mệnh trong một thế giới của linh khí, công pháp và pháp bảo.", icon: null },
+    'Võ Lâm': { description: "Ân oán giang hồ, tranh đoạt bí kíp, trở thành đại hiệp hoặc ma đầu trong một thế giới võ học Trung Hoa.", icon: null },
+    'Thời Chiến (Trung Hoa/Nhật Bản)': { description: "Sống sót và tạo dựng danh tiếng trong thời kỳ chiến quốc loạn lạc của Trung Hoa hoặc Nhật Bản.", icon: null },
+    'Đô Thị Hiện Đại': { description: "Những câu chuyện về tình yêu, quyền lực, và các thế lực siêu nhiên ẩn mình dưới ánh đèn neon của thành phố.", icon: null },
+    'Đô Thị Hiện Đại 100% bình thường': { description: "Không có siêu năng lực, không có hệ thống. Chỉ là những câu chuyện đời thường về tình yêu, công việc và cuộc sống.", icon: null },
+    'Hậu Tận Thế': { description: "Sinh tồn trong một thế giới hoang tàn sau thảm họa, đối mặt với quái vật, tài nguyên khan hiếm và những người sống sót khác.", icon: null },
+    'Huyền Huyễn Truyền Thuyết': { description: "Khi những truyền thuyết về thần, ma, và các sinh vật cổ xưa trở thành hiện thực. Một thế giới của sức mạnh phi thường.", icon: null },
 };
 
-const LoadingSpinner = () => <div className="spinner spinner-sm"></div>;
+const LoadingSpinner = () => <div className="spinner spinner-sm">Đang tải...</div>;
 
 interface WorldCreatorProps {
     onBack: () => void;
@@ -208,10 +208,10 @@ export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount }
                 <h2>Chọn một cuộc phiêu lưu để bắt đầu</h2>
                 <div className="genre-selection-grid">
                     {GENRES.map(genre => {
-                        const details = GENRE_DETAILS[genre] || { description: "Một thế giới mới đang chờ bạn khám phá.", icon: <svg /> };
+                        const details = GENRE_DETAILS[genre] || { description: "Một thế giới mới đang chờ bạn khám phá.", icon: null };
                         return (
                             <button key={genre} className="genre-card" onClick={() => handleGenreSelect(genre)}>
-                                <div className="genre-card-icon">{details.icon}</div>
+                                {details.icon && <div className="genre-card-icon">{details.icon}</div>}
                                 <div className="genre-card-info">
                                     <span className="genre-card-label">{genre}</span>
                                     <p className="genre-card-description">{details.description}</p>
@@ -234,13 +234,11 @@ export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount }
             <form className="wc-creation-tome" onSubmit={(e) => { e.preventDefault(); handleInitiateCreation(selectedFanficRole); }}>
                 <header className="wc-header">
                     <button type="button" className="wc-button-icon" onClick={onBack}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5m7 7-7-7 7-7"/></svg>
                         Quay Lại
                     </button>
                     <h1 className="wc-title">Tạo Dựng Thế Giới</h1>
                     <button type="button" className="wc-button-icon" onClick={handleRefresh}>
                         Làm Mới
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
                     </button>
                 </header>
                 
@@ -283,7 +281,7 @@ export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount }
                                         <FormField label="Tình Huống Khởi Đầu (Idea)" htmlFor="idea">
                                             <div className="textarea-with-button">
                                                 <textarea name="idea" id="idea" value={formData.idea} onChange={handleInputChange} rows={4} placeholder="Ví dụ: Bị triệu hồi đến dị giới với tư cách anh hùng, nhưng chỉ số của tôi lại yếu nhất."></textarea>
-                                                <button type="button" className="wc-button-suggest-ai" onClick={() => handleSuggest('idea')} disabled={isSuggesting === 'idea'} title="Gợi ý bằng AI">{isSuggesting === 'idea' ? <LoadingSpinner/> : '✨'}</button>
+                                                <button type="button" className="wc-button-suggest-ai" onClick={() => handleSuggest('idea')} disabled={isSuggesting === 'idea'} title="Gợi ý bằng AI">{isSuggesting === 'idea' ? <LoadingSpinner/> : 'Gợi ý'}</button>
                                             </div>
                                             {ideaSuggestions.length > 0 && <div className="suggestion-list-container"><ul>{ideaSuggestions.map((s, i) => <li key={i} className="suggestion-item" onClick={() => {setFormData(p => ({...p, idea: s})); setIdeaSuggestions([]);}}>{s}</li>)}</ul></div>}
                                             <div className="wc-context-actions">
@@ -299,7 +297,7 @@ export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount }
                                         <FormField label="Tổng Quan Về Thế Giới (Details)" htmlFor="details">
                                             <div className="textarea-with-button">
                                                 <textarea name="details" id="details" value={formData.details} onChange={handleInputChange} rows={8} placeholder="Mô tả về lịch sử, địa lý, các phe phái, hoặc các quy luật đặc biệt của thế giới."></textarea>
-                                                <button type="button" className="wc-button-suggest-ai" onClick={handleSuggestContext} disabled={isGeneratingContext} title="Tạo tổng quan bằng AI">{isGeneratingContext ? <LoadingSpinner/> : '✨'}</button>
+                                                <button type="button" className="wc-button-suggest-ai" onClick={handleSuggestContext} disabled={isGeneratingContext} title="Tạo tổng quan bằng AI">{isGeneratingContext ? <LoadingSpinner/> : 'Tạo'}</button>
                                             </div>
                                         </FormField>
                                     </>
@@ -353,7 +351,7 @@ export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount }
                                         <FormField label="Sơ Lược Tiểu Sử" htmlFor="backstory">
                                             <div className="textarea-with-button">
                                                 <textarea name="backstory" id="backstory" value={formData.backstory} onChange={handleInputChange} rows={8} placeholder="Mô tả quá khứ, xuất thân và những sự kiện quan trọng đã định hình nên nhân vật."></textarea>
-                                                <button type="button" className="wc-button-suggest-ai" onClick={() => handleSuggest('backstory')} disabled={isSuggesting === 'backstory'} title="Gợi ý bằng AI">{isSuggesting === 'backstory' ? <LoadingSpinner/> : '✨'}</button>
+                                                <button type="button" className="wc-button-suggest-ai" onClick={() => handleSuggest('backstory')} disabled={isSuggesting === 'backstory'} title="Gợi ý bằng AI">{isSuggesting === 'backstory' ? <LoadingSpinner/> : 'Gợi ý'}</button>
                                             </div>
                                             {backstorySuggestions.length > 0 && <div className="suggestion-list-container"><ul>{backstorySuggestions.map((s, i) => <li key={i} className="suggestion-item" onClick={() => {setFormData(p => ({...p, backstory: s})); setBackstorySuggestions([]);}}>{s}</li>)}</ul></div>}
                                         </FormField>

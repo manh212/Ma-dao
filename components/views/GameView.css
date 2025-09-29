@@ -8,7 +8,7 @@
     height: 100dvh;
     display: flex;
     flex-direction: column;
-    transition: background-color 0.5s ease, color 0.5s ease;
+    transition: none;
     position: relative; /* Needed for combat view positioning */
 }
 
@@ -17,39 +17,12 @@
     display: flex;
     flex-direction: column;
     overflow: hidden; /* Prevent content from overflowing when combat view is active */
-    transition: filter 0.5s ease-out, transform 0.5s ease-out;
+    transition: none;
     position: relative; /* Added for spotlight pseudo-element */
 }
 
-/* NEW: Spotlight effect to highlight the footer area */
 .game-main-content::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: radial-gradient(120% 80% at 50% 100%, rgba(var(--rgb-accent-secondary), 0.25) 0%, rgba(var(--rgb-accent-secondary), 0) 60%);
-    filter: blur(80px);
-    z-index: 4; /* Below footer (5) but above body content */
-    pointer-events: none; /* Allows clicks to pass through */
-    transition: opacity 0.5s ease;
-    animation: spotlight-fade-in 1.5s 0.5s ease-out backwards;
-}
-
-@keyframes spotlight-fade-in {
-    from { opacity: 0; transform: translateY(50px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-body[data-performance-effects="disabled"] .game-main-content::after {
     display: none;
-}
-
-
-.game-main-content.blurred {
-    filter: blur(8px) brightness(0.7);
-    transform: scale(0.98);
 }
 
 .game-header {
@@ -63,8 +36,8 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     flex-shrink: 0;
     z-index: 10;
     position: relative;
-    background: linear-gradient(to bottom, rgba(var(--rgb-bg-primary), 0.9), rgba(var(--rgb-bg-primary), 0.7));
-    transition: background-color 0.5s, border-color 0.5s, filter 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
+    background: var(--bg-primary);
+    transition: none;
 }
 
 .game-header-left {
@@ -83,15 +56,11 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     overflow: hidden;
     text-overflow: ellipsis;
     user-select: none;
-    
-    /* NEW: Shining effect */
-    background: linear-gradient(90deg, var(--text-muted), var(--text-primary), var(--text-muted));
-    background-size: 200% auto;
-    color: #fff;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: title-shine 5s linear infinite;
+    color: var(--text-primary);
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    animation: none;
 }
 
 .game-status-bar {
@@ -106,11 +75,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     gap: 0.5rem;
     font-size: 0.9rem;
 }
-.status-item svg {
-    width: 18px; height: 18px;
-    color: var(--accent-color, var(--accent-secondary));
-    opacity: 0.8;
-}
+
 .status-item span {
     font-weight: 500;
 }
@@ -121,23 +86,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     padding: 0.25rem 0.75rem;
     border-radius: var(--radius-full);
     font-weight: 700 !important; /* Override .status-item span */
-    animation: combat-indicator-pulse 1.5s infinite ease-in-out;
-}
-
-.combat-indicator svg {
-    color: var(--text-on-accent) !important; /* Override .status-item svg */
-    opacity: 1 !important;
-}
-
-@keyframes combat-indicator-pulse {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 5px rgba(var(--rgb-accent-danger), 0.5);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 15px rgba(var(--rgb-accent-danger), 0.8);
-    }
+    animation: none;
 }
 
 .game-header-right {
@@ -158,13 +107,13 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease-out;
+    transition: none;
 }
 .menu-toggle-button:hover:not(:disabled) {
     background: var(--accent-color, var(--accent-secondary));
     border-color: var(--accent-color, var(--accent-secondary));
     color: white;
-    transform: rotate(90deg) scale(1.1);
+    transform: none;
 }
 
 .menu-toggle-button:disabled {
@@ -185,10 +134,10 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     background: var(--accent-color, var(--accent-secondary));
     border-color: var(--accent-color, var(--accent-secondary));
     color: white;
-    transform: scale(1.1);
+    transform: none;
 }
 .focus-mode-toggle:hover:not(:disabled) {
-    transform: scale(1.1);
+    transform: none;
 }
 
 /* --- Game Body --- */
@@ -197,7 +146,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     overflow-y: auto;
     padding: clamp(1rem, 5vw, 2rem) clamp(1rem, 5vw, 4rem);
     scrollbar-color: var(--accent-color, var(--accent-secondary)) transparent;
-    transition: all 0.5s ease-out;
+    transition: none;
 }
 .game-body::-webkit-scrollbar { width: 8px; }
 .game-body::-webkit-scrollbar-thumb {
@@ -208,7 +157,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
 
 /* --- Turn & Story Content --- */
 .turn-container {
-    animation: bubble-pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: none;
     padding-bottom: var(--space-8);
     border-bottom: 1px solid rgba(var(--rgb-border-primary), 0.5);
     margin-bottom: var(--space-8);
@@ -228,13 +177,13 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     border-radius: var(--radius-lg);
     max-width: 80ch;
     text-align: center;
-    box-shadow: var(--shadow-md);
-    animation: subtle-fade-in 0.8s ease-out;
+    box-shadow: none;
+    animation: none;
 }
 .theme-parchment .world-event-container {
-    background: url('https://www.transparenttextures.com/patterns/old-paper-2.png'), var(--bg-secondary-color);
+    background: var(--bg-secondary-color);
     border-color: #8B1A1A;
-    box-shadow: 0 5px 15px rgba(85, 78, 71, 0.2);
+    box-shadow: none;
 }
 .world-event-title {
     font-size: 1.8rem;
@@ -303,7 +252,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     padding: var(--space-3) var(--space-4);
     border-radius: var(--radius-sm);
     font-weight: 500;
-    animation: subtle-fade-in 0.3s ease-out;
+    animation: none;
 }
 
 /* NEW: Reality Ripple Message for Fanfic */
@@ -317,7 +266,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     border: 1px dashed rgba(var(--rgb-accent-pink), 0.3);
     border-radius: var(--radius-md);
     max-width: 80%;
-    animation: subtle-fade-in 0.5s ease-out;
+    animation: none;
 }
 
 
@@ -338,18 +287,15 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     border-radius: var(--radius-full);
     flex-shrink: 0;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    animation: avatar-glow 5s ease-in-out infinite;
+    transition: none;
+    animation: none;
     overflow: hidden;
     background-color: var(--bg-interactive);
 }
-.player-container .dialogue-avatar {
-    animation-delay: 1s; /* Offset glow */
-}
 
 .dialogue-avatar:hover {
-    transform: scale(1.1);
-    box-shadow: var(--shadow-md);
+    transform: none;
+    box-shadow: none;
 }
 .dialogue-avatar-img {
     width: 100%; height: 100%;
@@ -415,7 +361,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     max-width: 450px;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-md);
+    box-shadow: none;
     border: 4px solid var(--bg-secondary);
     display: flex;
     justify-content: center;
@@ -436,7 +382,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     z-index: 100;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s;
+    transition: none;
 }
 .game-menu-overlay.open {
     opacity: 1;
@@ -451,9 +397,9 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     width: 280px;
     background-color: var(--bg-secondary);
     border-right: 1px solid var(--border-primary);
-    box-shadow: var(--shadow-lg);
+    box-shadow: none;
     transform: translateX(-100%);
-    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-image 0.5s ease;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     z-index: 101;
     display: flex;
     flex-direction: column;
@@ -484,20 +430,15 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     color: var(--text-secondary);
     text-align: left;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: none;
 }
 .sidebar-nav-button:hover:not(:disabled) {
     background-color: var(--bg-interactive-hover);
     color: var(--text-primary);
-    transform: translateX(5px);
+    transform: none;
 }
 .sidebar-nav-button:disabled { opacity: 0.5; cursor: not-allowed; }
-.sidebar-nav-button svg {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-    stroke-width: 2;
-}
+
 .sidebar-actions {
     margin-top: auto;
     padding-top: var(--space-4);
@@ -516,14 +457,12 @@ body[data-performance-effects="disabled"] .game-main-content::after {
 /* --- Game Footer --- */
 .game-footer {
     padding: clamp(1rem, 5vw, 1.5rem) clamp(1rem, 5vw, 4rem); /* Reduced padding */
-    background: linear-gradient(to top, rgba(var(--rgb-bg-primary), 0.95) 50%, transparent);
-    border-top: 1px solid;
-    border-image-source: linear-gradient(to right, transparent, rgba(var(--rgb-accent-secondary), 0.5), transparent);
-    border-image-slice: 1;
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-primary);
     flex-shrink: 0;
     position: relative;
     z-index: 5;
-    transition: all 0.3s ease-out;
+    transition: none;
 }
 
 .game-footer.collapsed {
@@ -531,21 +470,20 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     padding-bottom: 0;
     background: transparent;
     border-top-color: transparent;
-    border-image-source: none;
 }
 
 .game-footer-content {
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out, max-height 0.4s ease-out;
+    transition: none;
     overflow: hidden;
     max-height: 0;
     opacity: 0;
-    transform: translateY(20px);
+    transform: none;
 }
 
 .game-footer-content.visible {
     max-height: 500px;
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
 }
 
 .suggested-actions-container {
@@ -562,7 +500,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     padding: 0;
     border-radius: var(--radius-md);
     text-align: left;
-    transition: all 0.2s ease-out;
+    transition: none;
     cursor: pointer;
     display: block;
     min-height: 85px;
@@ -574,8 +512,8 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     background-color: var(--bg-interactive-hover);
     border-color: var(--accent-secondary);
     color: var(--text-primary);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
+    transform: none;
+    box-shadow: none;
 }
 
 .suggested-action-button:disabled {
@@ -597,17 +535,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
 }
 
 .prediction-indicator {
-    width: 8px;
-    height: 8px;
-    background-color: var(--accent-warning);
-    border-radius: 50%;
-    animation: pulse-indicator 1.5s infinite ease-in-out;
-    box-shadow: 0 0 5px var(--accent-warning);
-    flex-shrink: 0;
-}
-@keyframes pulse-indicator {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(0.7); opacity: 0.5; }
+    display: none;
 }
 
 .action-button-text {
@@ -617,59 +545,13 @@ body[data-performance-effects="disabled"] .game-main-content::after {
 }
 
 .action-potentials {
-    display: grid;
-    grid-template-columns: 35px 1fr 35px;
-    align-items: center;
-    gap: var(--space-2);
-}
-
-.potential-label {
-    font-weight: 600;
-    font-size: var(--font-size-sm);
-}
-
-.potential-label.risk {
-    color: var(--accent-danger);
-    text-align: left;
-}
-.potential-label.benefit {
-    color: var(--accent-success);
-    text-align: right;
-}
-
-.potential-bar-wrapper.combined {
-    height: 12px;
-    background-color: rgba(var(--rgb-bg-primary), 0.5);
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1px solid var(--border-primary);
-    position: relative;
-}
-
-.potential-bar.combined-bar {
-    height: 100%;
-    transition: background 0.4s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.potential-conflict-icon {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%) translateX(-50%);
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 18px;
-    line-height: 1;
-    transition: left 0.4s ease;
-    z-index: 1;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    display: none;
 }
 
 .suggested-action-button.predicted-ready {
     color: var(--accent-success);
     border-color: var(--accent-success);
-    box-shadow: 0 0 10px rgba(var(--rgb-accent-success), 0.5);
+    box-shadow: none;
 }
 
 .suggested-action-button.processing {
@@ -710,16 +592,12 @@ body[data-performance-effects="disabled"] .game-main-content::after {
 }
 .suggested-action-button.fate-altering {
     border-color: var(--accent-warning);
-    animation: fate-altering-pulse 2s infinite ease-in-out;
+    animation: none;
 }
 .suggested-action-button.fate-altering:disabled {
     animation: none;
     border-color: var(--border-primary);
     opacity: 0.6;
-}
-@keyframes fate-altering-pulse {
-    0%, 100% { box-shadow: 0 0 8px rgba(var(--rgb-accent-warning), 0.4); }
-    50% { box-shadow: 0 0 16px 4px rgba(var(--rgb-accent-warning), 0.6); }
 }
 
 
@@ -732,13 +610,13 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     border-radius: var(--radius-xl);
     border: 1px solid var(--border-primary);
     padding: var(--space-2);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease-out;
+    box-shadow: none;
+    transition: none;
 }
 
 .main-input-container:focus-within {
     border-color: var(--accent-secondary);
-    box-shadow: 0 0 0 3px rgba(var(--rgb-accent-secondary), 0.3);
+    box-shadow: none;
 }
 
 .turn-mod-button {
@@ -752,18 +630,13 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease-out;
-}
-
-.turn-mod-button svg {
-    width: 22px;
-    height: 22px;
+    transition: none;
 }
 
 .turn-mod-button:hover:not(:disabled) {
     background-color: var(--bg-interactive-hover);
     color: var(--text-primary);
-    transform: scale(1.05);
+    transform: none;
 }
 
 .turn-mod-button:disabled {
@@ -800,10 +673,9 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    font-size: 1.5rem;
     padding: var(--space-2);
     border-radius: var(--radius-md);
-    transition: color 0.2s, background-color 0.2s;
+    transition: none;
     display: flex;
     align-items: center;
 }
@@ -823,21 +695,17 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease-out;
+    transition: none;
 }
 .send-action-button:hover:not(:disabled) {
     filter: brightness(1.1);
-    transform: scale(1.05);
+    transform: none;
 }
 .send-action-button:disabled {
     background-color: var(--bg-interactive);
     color: var(--text-muted);
     opacity: 0.7;
     cursor: not-allowed;
-}
-.send-action-button svg {
-    width: 20px;
-    height: 20px;
 }
 
 .action-analysis-container {
@@ -850,7 +718,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     padding: var(--space-3) var(--space-4);
     border-radius: var(--radius-lg);
     margin-top: var(--space-3);
-    animation: subtle-fade-in 0.3s ease-out;
+    animation: none;
 }
 
 .analysis-details {
@@ -879,8 +747,8 @@ body[data-performance-effects="disabled"] .game-main-content::after {
     padding: var(--space-3);
     width: 300px;
     max-width: 300px;
-    box-shadow: var(--shadow-lg);
-    animation: subtle-fade-in 0.2s ease-out;
+    box-shadow: none;
+    animation: none;
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
@@ -914,7 +782,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
 .show-actions-container {
     padding: var(--space-2) 0;
     text-align: center;
-    animation: subtle-fade-in 0.5s ease-out;
+    animation: none;
     width: 100%;
 }
 
@@ -939,19 +807,14 @@ body[data-performance-effects="disabled"] .game-main-content::after {
 }
 
 .show-actions-button svg {
-    width: 20px;
-    height: 20px;
-    transition: transform 0.2s ease-out;
+    display: none;
 }
 
-.show-actions-button:hover svg {
-    transform: scale(1.1);
-}
 
 .turn-processing-container {
     width: 100%;
     padding: var(--space-4) 0;
-    animation: subtle-fade-in 0.3s ease-out;
+    animation: none;
 }
 .turn-processing-progress {
     width: 100%;
@@ -977,7 +840,7 @@ body[data-performance-effects="disabled"] .game-main-content::after {
 .progress-bar {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, var(--accent-secondary), var(--accent-primary));
+    background: var(--accent-primary);
     border-radius: 3px;
     transition: width 0.1s linear;
 }
@@ -991,11 +854,11 @@ body[data-performance-effects="disabled"] .game-main-content::after {
 
 .game-container.focus-mode .app-background-overlay {
     background-color: rgba(var(--rgb-bg-primary), 0.97);
-    transition: background-color 0.5s ease-out;
+    transition: none;
 }
 
 body:not([data-performance-effects="disabled"]) .game-container.focus-mode .game-header {
-    filter: blur(3px);
+    filter: none;
     opacity: 0.7;
 }
 
@@ -1030,7 +893,7 @@ body:not([data-performance-effects="disabled"]) .game-container.focus-mode .game
     right: 0;
     background: var(--bg-tertiary);
     border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
+    box-shadow: none;
     border: 1px solid var(--border-primary);
     display: flex;
     flex-direction: column;
@@ -1038,7 +901,7 @@ body:not([data-performance-effects="disabled"]) .game-container.focus-mode .game
     padding: var(--space-2);
     width: 200px;
     z-index: 10;
-    animation: subtle-fade-in 0.2s ease-out;
+    animation: none;
 }
 
 .more-actions-menu .turn-mod-button {
@@ -1047,9 +910,4 @@ body:not([data-performance-effects="disabled"]) .game-container.focus-mode .game
     justify-content: flex-start;
     gap: var(--space-3);
     padding: var(--space-2) var(--space-3);
-}
-
-.more-actions-menu .turn-mod-button svg {
-    width: 20px;
-    height: 20px;
 }

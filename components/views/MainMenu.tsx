@@ -57,7 +57,6 @@ const GENRE_QUOTES: Record<string, string[]> = {
 export const MainMenu = ({ onNavigate, onOpenApiKeyModal, onOpenSettingsModal, onOpenChangelogModal, apiStatus }: MainMenuProps) => {
     const [dynamicTitle, setDynamicTitle] = useState('Hãy cố gắng cho tương lai tốt hơn');
     const [lastGenre, setLastGenre] = useState('default');
-    const backdropRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const fetchLastGenreAndSetTitle = async () => {
@@ -82,25 +81,9 @@ export const MainMenu = ({ onNavigate, onOpenApiKeyModal, onOpenSettingsModal, o
 
         fetchLastGenreAndSetTitle();
     }, []);
-
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            if (!backdropRef.current) return;
-            const { clientX, clientY } = e;
-            const { innerWidth, innerHeight } = window;
-            const x = (clientX / innerWidth - 0.5) * 40;
-            const y = (clientY / innerHeight - 0.5) * 40;
-            backdropRef.current.style.transform = `translateX(${-x}px) translateY(${-y}px)`;
-        };
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
     
     return (
         <div className="main-menu-container" data-genre-theme={sanitizeTextForClassName(lastGenre)}>
-            <div ref={backdropRef} className="menu-backdrop"></div>
-            <div className="menu-vignette"></div>
-            <div className="menu-center-piece"></div>
             <h1 className="main-menu-title" id="menu-title">
                 {dynamicTitle}
             </h1>

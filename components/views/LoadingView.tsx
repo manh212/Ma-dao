@@ -6,17 +6,6 @@ import React, { useMemo } from 'react';
 import './LoadingView.css';
 import type { SaveFile } from '../../types';
 
-const DreamParticles = () => {
-    const particles = useMemo(() => Array.from({ length: 30 }), []);
-    return (
-        <div className="dream-particle-container">
-            {particles.map((_, i) => (
-                <div className="dream-particle" key={i} style={{ '--i': i } as React.CSSProperties} />
-            ))}
-        </div>
-    );
-};
-
 interface LoadingViewProps {
     saveData?: SaveFile | null;
 }
@@ -31,13 +20,11 @@ export const LoadingView = ({ saveData }: LoadingViewProps) => {
     }, [saveData]);
     
     return (
-        <div className="loading-view-container dream-view">
-            <DreamParticles />
-            <div className="dream-content">
-                <p className="dream-text">"{dreamText}"</p>
+        <div className="loading-view-container">
+            <div className="loading-content">
+                <p className="loading-text">"{dreamText}"</p>
                 <h2 className="loading-view-title">Đang hồi tưởng lại ký ức...</h2>
             </div>
-            <div className="spinner spinner-lg"></div>
         </div>
     );
 };

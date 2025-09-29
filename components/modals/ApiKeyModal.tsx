@@ -29,15 +29,6 @@ interface KeyStatusInfo {
     message?: string;
 }
 
-const EyeIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-);
-
-const EyeSlashIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24" fill="currentColor"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>
-);
-
-
 export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiRequestCount, onDeleteAll }: ApiKeyModalProps) => {
     const [configs, setConfigs] = useState<ApiConfig[]>([]);
     const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
@@ -46,6 +37,14 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
     const [visibleKeys, setVisibleKeys] = useState(new Set<string>());
     const modalRef = useRef<HTMLDivElement>(null);
     useModalAccessibility(true, modalRef);
+
+    const handleCloseAndSave = () => {
+        const validConfigs = configs
+            .map(({ id, ...rest }) => rest) // remove temporary id before saving
+            .filter(c => c.key.trim() !== '');
+        onSave(JSON.stringify(validConfigs));
+        onClose();
+    };
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -57,7 +56,7 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [onClose]);
+    }, [onClose, handleCloseAndSave]);
     
     useEffect(() => {
         let parsedConfigs: Omit<ApiConfig, 'id'>[] = [];
@@ -85,14 +84,6 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
         });
         setKeyStatuses(initialStatuses);
     }, [initialConfigs]);
-
-    const handleCloseAndSave = () => {
-        const validConfigs = configs
-            .map(({ id, ...rest }) => rest) // remove temporary id before saving
-            .filter(c => c.key.trim() !== '');
-        onSave(JSON.stringify(validConfigs));
-        onClose();
-    };
 
     const handleKeyChange = (id: string, value: string) => {
         setConfigs(prev => prev.map(c => c.id === id ? { ...c, key: value } : c));
@@ -245,12 +236,12 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
                                             onClick={() => toggleKeyVisibility(config.id)}
                                             aria-label={visibleKeys.has(config.id) ? `Ẩn khóa API ${index + 1}` : `Hiện khóa API ${index + 1}`}
                                         >
-                                            {visibleKeys.has(config.id) ? <EyeSlashIcon /> : <EyeIcon />}
+                                            {visibleKeys.has(config.id) ? '[Ẩn]' : '[Hiện]'}
                                         </button>
                                     </div>
                                     <div className="api-key-status-wrapper">
                                         {statusInfo.status === 'checking' ? (
-                                            <div className="spinner spinner-sm"></div>
+                                            <span className="spinner spinner-sm"></span>
                                         ) : (
                                             <span className={`api-key-status-indicator ${statusInfo.status}`}></span>
                                         )}
@@ -286,15 +277,13 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
                     </button>
                     <div style={{display: 'flex', gap: '1rem'}}>
                         <button 
-                            className="api-key-close-btn" 
+                            className="api-key-check-btn" 
                             onClick={handleCheckKeys} 
                             disabled={isChecking || configs.every(c => !c.key.trim())}
                         >
-                            {isChecking ? 'Đang kiểm tra...' : 'Kiểm tra khóa'}
+                            {isChecking ? 'Đang kiểm tra...' : 'Kiểm Tra Toàn Bộ'}
                         </button>
-                        <button className="api-key-check-btn" onClick={handleCloseAndSave}>
-                            Lưu & Đóng
-                        </button>
+                        <button className="api-key-close-btn" onClick={handleCloseAndSave}>Lưu & Đóng</button>
                     </div>
                 </footer>
             </div>

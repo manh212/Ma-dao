@@ -17,7 +17,6 @@ import { GameBody } from '../game/GameBody';
 import { GameFooter } from '../game/GameFooter';
 import { GameMenuSidebar } from '../game/GameMenuSidebar';
 import { CombatView } from '../game/CombatView';
-import { CombatTransitionOverlay } from '../game/CombatTransitionOverlay';
 import { CharacterDetailView } from './CharacterDetailView';
 import { useGameEngine } from '../../hooks/useGameEngine';
 import { useGameContext } from '../contexts/GameContext';
@@ -47,21 +46,9 @@ export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCoun
     const [visibleTurnsCount, setVisibleTurnsCount] = useState(20);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [areActionsVisible, setAreActionsVisible] = useState(true);
-    const [showCombatTransition, setShowCombatTransition] = useState(false);
     const [isFocusMode, setIsFocusMode] = useState(false);
     
     const gameBodyRef = useRef<HTMLDivElement>(null);
-    const prevIsInCombat = useRef(gameState?.isInCombat);
-
-
-    useEffect(() => {
-        if (gameState?.isInCombat && !prevIsInCombat.current) {
-            setShowCombatTransition(true);
-            const timer = setTimeout(() => setShowCombatTransition(false), 1200); // Duration of the crack animation
-            return () => clearTimeout(timer);
-        }
-        prevIsInCombat.current = gameState?.isInCombat;
-    }, [gameState?.isInCombat]);
 
     const handleTurnCompletion = useCallback((newGameState: GameState, newWorldSettings: WorldSettings, turnResult: any) => {
         dispatch({ type: 'LOAD_GAME', payload: { gameState: newGameState, worldSettings: newWorldSettings } });
@@ -348,8 +335,6 @@ export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCoun
                 addToast={addToast} 
             />}
             
-            {showCombatTransition && <CombatTransitionOverlay />}
-            
             {/* FIX: Add missing 'id' prop to EntityTooltip. */}
             <EntityTooltip id="game-view-tooltip" data={activeTooltip?.data || null} onClose={() => setActiveTooltip(null)} onEntityClick={handleEntityClick} onEntityMouseEnter={handleEntityMouseEnter} onEntityMouseLeave={handleEntityMouseLeave} />
             
@@ -374,7 +359,7 @@ export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCoun
                 setIsFocusMode={setIsFocusMode}
             />
 
-            <div className={`game-main-content ${isInCombat ? 'blurred' : ''}`}>
+            <div className={`game-main-content`}>
                  <GameBody 
                     ref={gameBodyRef}
                     turns={gameState.turns}

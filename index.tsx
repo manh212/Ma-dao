@@ -27,29 +27,6 @@ import { downloadSaveFile, uploadAndProcessSaveFiles } from './utils/fileUtils';
 import type { SaveFile, GameState, WorldSettings } from './types';
 
 //================================================================
-// WELCOME ANIMATION COMPONENT
-//================================================================
-const IntroAnimation = ({ onEnd }: { onEnd: () => void }) => {
-    useEffect(() => {
-        const timer = setTimeout(onEnd, 4000); // 4 seconds duration
-        return () => clearTimeout(timer);
-    }, [onEnd]);
-
-    const particles = useMemo(() => Array.from({ length: 50 }), []);
-
-    return (
-        <div className="intro-animation-overlay">
-            <div className="particle-container">
-                {particles.map((_, i) => (
-                    <div className="particle" key={i} style={{ '--i': i } as React.CSSProperties} />
-                ))}
-            </div>
-        </div>
-    );
-};
-
-
-//================================================================
 // CONTENT COMPONENT
 //================================================================
 const AppContent = () => {
@@ -59,7 +36,6 @@ const AppContent = () => {
     
     const [showApiKeyModal, setShowApiKeyModal] = useState(false);
     const [isApiKeyModalForced, setIsApiKeyModalForced] = useState(false);
-    const [showIntroAnimation, setShowIntroAnimation] = useState(false);
     const [showSettingsModal, setShowSettingsModal] = useState(false);
     const [showChangelogModal, setShowChangelogModal] = useState(false);
     const [apiConfigs, setApiConfigs] = useState('[]');
@@ -414,8 +390,7 @@ const AppContent = () => {
 
     return (
         <>
-            {showIntroAnimation && <IntroAnimation onEnd={() => setShowIntroAnimation(false)} />}
-            <div className={`app-container ${viewClasses[currentView] || 'menu-view'} ${showIntroAnimation ? 'hidden' : ''}`}>
+            <div className={`app-container ${viewClasses[currentView] || 'menu-view'}`}>
                 {backgroundUrl && (
                     <>
                         <div 
@@ -434,9 +409,6 @@ const AppContent = () => {
                     onClose={() => {
                         ApiKeyManager.loadKeys();
                         if (ApiKeyManager.getKey()) {
-                             if (isApiKeyModalForced) {
-                                setShowIntroAnimation(true);
-                            }
                             setShowApiKeyModal(false);
                             setIsApiKeyModalForced(false);
                         } else if (!isApiKeyModalForced) {

@@ -4,11 +4,6 @@
 */
 
 /* --- World Creator Styles (Grand Artistic Overhaul - "The Creation Tome" Theme) --- */
-@keyframes tome-fade-in {
-  from { opacity: 0; transform: translateY(20px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
 .wc-container {
   width: 100%;
   padding: 2rem clamp(1rem, 5vw, 4rem) 160px; /* Add bottom padding for sticky footer space */
@@ -24,7 +19,7 @@
 .wc-creation-tome {
   background: rgba(var(--rgb-bg-secondary), 0.8);
   border: 1px solid var(--border-primary);
-  box-shadow: var(--shadow-lg), 0 0 80px -30px rgba(var(--rgb-accent-secondary), 0.3);
+  box-shadow: none;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -34,7 +29,7 @@
   padding: var(--space-8);
   border-radius: var(--radius-xl);
   z-index: 1;
-  animation: tome-fade-in 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  animation: none;
 }
 
 .wc-header {
@@ -54,12 +49,11 @@
   color: var(--text-primary);
   margin: 0;
   text-align: center;
-  background: linear-gradient(60deg, var(--accent-primary), var(--accent-pink), var(--accent-secondary));
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: title-shine 10s linear infinite;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  animation: none;
+  text-shadow: none;
 }
 
 /* General & Secondary Button Style */
@@ -70,23 +64,22 @@
     padding: var(--space-3) var(--space-4);
     border-radius: var(--radius-md);
     font-weight: 600;
-    box-shadow: var(--shadow-sm);
+    box-shadow: none;
     margin-top: var(--space-2);
 }
 .wc-button:hover:not(:disabled) {
-    transform: translateY(-2px);
+    transform: none;
     background: var(--bg-interactive-hover);
     border-color: var(--accent-secondary);
     color: var(--text-primary);
-    box-shadow: var(--shadow-hover);
+    box-shadow: none;
 }
 
 /* Suggest AI Button */
 .wc-button-suggest-ai {
     padding: var(--space-2);
-    font-size: 1.5rem;
     height: 44px;
-    width: 44px;
+    width: auto;
     min-width: 44px;
     line-height: 1;
     color: var(--accent-warning);
@@ -112,8 +105,8 @@
   background: var(--bg-interactive);
   color: var(--text-primary);
   border-color: var(--accent-secondary);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
+  transform: none;
+  box-shadow: none;
 }
 
 /* --- NEW Genre Selection Step --- */
@@ -124,7 +117,7 @@
   width: 100%;
   max-width: 1000px;
   margin: auto;
-  animation: fade-in-content 0.5s ease-out;
+  animation: none;
 }
 
 .genre-selection-container h2 {
@@ -150,37 +143,24 @@
   display: flex;
   align-items: center;
   gap: var(--space-5);
-  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: none;
   text-align: left;
 }
 
 .genre-card:hover, .genre-card:focus-visible {
-  transform: translateX(10px);
-  box-shadow: var(--shadow-md);
+  transform: none;
+  box-shadow: none;
   border-color: var(--accent-secondary);
   background: rgba(var(--rgb-bg-tertiary), 0.7);
   outline: none;
 }
 .genre-card:hover .genre-card-icon, .genre-card:focus-visible .genre-card-icon {
   color: var(--accent-secondary);
-  transform: scale(1.1);
+  transform: none;
 }
 
 .genre-card-icon {
-  color: var(--text-secondary);
-  transition: all 0.25s ease;
-  flex-shrink: 0;
-  background-color: var(--bg-interactive);
-  border-radius: var(--radius-md);
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.genre-card-icon svg {
-    width: 32px;
-    height: 32px;
+  display: none;
 }
 
 .genre-card-info {
@@ -239,7 +219,7 @@
     background: rgba(var(--rgb-bg-primary), 0.3);
     border-radius: var(--radius-lg);
     border: 1px solid var(--border-primary);
-    transition: box-shadow 0.3s ease-out, transform 0.3s ease-out;
+    transition: none;
 }
 .form-section.section-locked {
     opacity: 0.6;
@@ -315,7 +295,7 @@
     font-family: inherit;
     font-size: var(--font-size-base);
     box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: none;
 }
 .form-field textarea {
     resize: vertical;
@@ -326,7 +306,7 @@
 .form-field select:focus-visible {
   outline: none;
   border-color: var(--accent-secondary);
-  box-shadow: 0 0 0 3px rgba(var(--rgb-accent-secondary), 0.3);
+  box-shadow: none;
 }
 
 .textarea-with-button {
@@ -353,7 +333,7 @@
     cursor: pointer;
     font-style: italic;
     color: var(--text-secondary);
-    transition: background-color 0.2s;
+    transition: none;
 }
 .suggestion-item:not(:last-child) {
     border-bottom: 1px solid var(--border-primary);
@@ -434,7 +414,7 @@
   background-color: rgba(var(--rgb-bg-primary), 0.5);
   border-left: 3px solid var(--accent-secondary);
   border-radius: var(--radius-md);
-  animation: subtle-fade-in 0.3s ease-out;
+  animation: none;
 }
 .dao-path-description h6 {
   margin: 0 0 var(--space-2);
@@ -456,7 +436,7 @@
   left: 0;
   right: 0;
   padding: var(--space-4) clamp(1rem, 5vw, 4rem);
-  background: linear-gradient(to top, var(--bg-primary) 50%, transparent);
+  background: var(--bg-primary);
   z-index: 10;
   display: flex;
   justify-content: flex-end;
@@ -468,12 +448,12 @@
     font-size: var(--font-size-lg);
     background: var(--button-primary-bg);
     color: var(--text-on-accent);
-    text-shadow: var(--button-primary-text-shadow);
+    text-shadow: none;
     border: none;
 }
 .button-create-world:hover:not(:disabled) {
     filter: brightness(1.1);
-    box-shadow: var(--shadow-hover);
+    box-shadow: none;
 }
 .error-message {
     background: rgba(var(--rgb-accent-danger), 0.2);
