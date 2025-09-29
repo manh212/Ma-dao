@@ -70,28 +70,17 @@ const UnmemoizedInlineStoryRenderer = ({ text, gameState, onEntityClick, onEntit
             const entity = allEntitiesByName.get(name);
 
             if (entity) {
-                // If a matching entity is found, render an interactive span
+                // If a matching entity is found, render it as plain text without highlighting or interaction.
                 const nameToDisplay = entity.displayName || entity.name;
                 const title = (entity as GameCharacter).title ? `${(entity as GameCharacter).title} ` : '';
                 elements.push(
                     <React.Fragment key={`entity-frag-${index}`}>
                         {title}
-                        <span 
-                            className={`entity entity-${type.toLowerCase()}`} 
-                            onClick={(e) => onEntityClick(e as any, entity.id, type)} 
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onEntityClick(e as any, entity.id, type); } }}
-                            onMouseEnter={(e) => onEntityMouseEnter(e, entity.id, type)} 
-                            onMouseLeave={onEntityMouseLeave} 
-                            role="button" 
-                            tabIndex={0}
-                        >
-                            {nameToDisplay}
-                        </span>
+                        {nameToDisplay}
                     </React.Fragment>
                 );
             } else {
                 // If no entity matches, gracefully render just the name part as plain text.
-                // This prevents showing raw tags like `[LOC:Some Place]` to the user.
                 elements.push(renderTextSegment(name, `unhandled-${index}`));
             }
 
