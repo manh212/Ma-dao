@@ -120,13 +120,20 @@ export const ArtisticLoadingOverlay = ({ worldSettings, message, progress, timeE
                 <div className="parallax-vignette"></div>
             </div>
 
-            <div className="artistic-loading-content">
+            <div className="artistic-loading-content" role="status" aria-live="polite">
                 <div className="artistic-loading-text">
                     <p className="primary-message">{message}</p>
                     <p className="secondary-message">{dynamicMessage}</p>
                 </div>
                 
-                <div className="progress-svg-container">
+                <div 
+                    className="progress-svg-container" 
+                    role="progressbar" 
+                    aria-valuenow={progress} 
+                    aria-valuemin={0} 
+                    aria-valuemax={100}
+                    aria-valuetext={`Đang tạo thế giới: ${Math.round(progress)}%`}
+                >
                     <svg viewBox="0 0 280 100" preserveAspectRatio="xMidYMid meet">
                         <path className="progress-path-track" d={path} ref={pathRef} />
                         <path 

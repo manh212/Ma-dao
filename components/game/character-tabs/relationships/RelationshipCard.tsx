@@ -48,7 +48,7 @@ interface RelationshipCardProps {
     onClick: () => void;
 }
 
-export const RelationshipCard = ({ npc, playerRelationship, onClick }: RelationshipCardProps) => {
+const UnmemoizedRelationshipCard = ({ npc, playerRelationship, onClick }: RelationshipCardProps) => {
     const { relationship, respect = 0, trust = 0, fear = 0 } = npc;
     const { closeness = 0, influence = 0 } = playerRelationship || {};
     const relInfo = getRelationshipInfo(relationship);
@@ -89,3 +89,5 @@ export const RelationshipCard = ({ npc, playerRelationship, onClick }: Relations
         </div>
     );
 };
+// FIX: Wrap component in React.memo to prevent TypeScript errors related to the `key` prop when used in a list.
+export const RelationshipCard = React.memo(UnmemoizedRelationshipCard);

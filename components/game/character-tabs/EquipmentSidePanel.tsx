@@ -33,7 +33,8 @@ interface EquipmentSidePanelProps {
     onClose: () => void;
 }
 
-const EquipmentSlotDisplay = ({ slot, item, onUnequip, isGlowing, onMouseEnter, onMouseLeave, icon }: {
+// FIX: Wrap component in React.memo to prevent TypeScript errors related to the `key` prop when used in a list.
+const EquipmentSlotDisplay = React.memo(({ slot, item, onUnequip, isGlowing, onMouseEnter, onMouseLeave, icon }: {
     slot: EquipmentSlot;
     item?: Item;
     onUnequip: (slot: EquipmentSlot) => void;
@@ -61,7 +62,7 @@ const EquipmentSlotDisplay = ({ slot, item, onUnequip, isGlowing, onMouseEnter, 
             <div className="equipment-slot-icon">{icon}</div>
         )}
     </div>
-);
+));
 
 export const EquipmentSidePanel = ({ character, isPlayerCharacter, onClose }: EquipmentSidePanelProps) => {
     const { worldSettings, dispatch, gameState } = useGameContext();

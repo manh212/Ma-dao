@@ -11,7 +11,7 @@ interface SocialRelationshipCardProps {
     onClick: () => void;
 }
 
-export const SocialRelationshipCard = ({ relationship, targetNpc, onClick }: SocialRelationshipCardProps) => {
+const UnmemoizedSocialRelationshipCard = ({ relationship, targetNpc, onClick }: SocialRelationshipCardProps) => {
     return (
         <div className="relationship-card social-card" onClick={onClick}>
             <header className="relationship-card-header">
@@ -36,3 +36,5 @@ export const SocialRelationshipCard = ({ relationship, targetNpc, onClick }: Soc
         </div>
     );
 };
+// FIX: Wrap component in React.memo to prevent TypeScript errors related to the `key` prop when used in a list.
+export const SocialRelationshipCard = React.memo(UnmemoizedSocialRelationshipCard);

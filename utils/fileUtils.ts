@@ -73,7 +73,8 @@ export const uploadAndProcessSaveFiles = async (
     const errors: string[] = [];
     const allSavesToProcess: SaveFile[] = [];
 
-    for (const file of Array.from(files)) {
+// FIX: Iterate directly over the `FileList` object. It is iterable and this correctly infers `file` as type `File`.
+    for (const file of files) {
         try {
             if (!file.name.toLowerCase().endsWith('.zip')) {
                 errors.push(`Tệp ${file.name} có định dạng không được hỗ trợ. Chỉ chấp nhận tệp .zip.`);

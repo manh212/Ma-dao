@@ -18,17 +18,20 @@ interface RelationshipsTabProps {
 
 export const RelationshipsTab = ({ character, isPlayerCharacter, onNpcSelect }: RelationshipsTabProps) => {
     const { gameState } = useGameContext();
-    const allNpcsById = new Map((gameState.knowledgeBase.npcs || []).map(npc => [npc.id, npc]));
+// FIX: Add explicit generic types to the Map constructor to ensure correct type inference.
+    const allNpcsById = new Map<string, GameCharacter>((gameState.knowledgeBase.npcs || []).map(npc => [npc.id, npc]));
 
     const favors = (character.relationships || [])
         .filter(r => r.sentimentDetails?.type === 'Favor')
         .map(r => ({ ...r, npc: allNpcsById.get(r.targetId) }))
-        .filter(r => r.npc);
+// FIX: Add a type guard to the filter to ensure TypeScript correctly infers `npc` as `GameCharacter` and not `GameCharacter | undefined`.
+        .filter((r): r is typeof r & { npc: GameCharacter } => !!r.npc);
 
     const grudges = (character.relationships || [])
         .filter(r => r.sentimentDetails?.type === 'Grudge')
         .map(r => ({ ...r, npc: allNpcsById.get(r.targetId) }))
-        .filter(r => r.npc);
+// FIX: Add a type guard to the filter to ensure TypeScript correctly infers `npc` as `GameCharacter` and not `GameCharacter | undefined`.
+        .filter((r): r is typeof r & { npc: GameCharacter } => !!r.npc);
 
     if (isPlayerCharacter) {
         const allNpcs = gameState.knowledgeBase?.npcs?.filter(npc => !npc.deathState?.isDead) || [];

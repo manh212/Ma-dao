@@ -257,7 +257,8 @@ export const GalleryModal = ({ onClose, addToast, incrementApiRequestCount }: Ga
         if (!files || files.length === 0) return;
         
         let processedCount = 0;
-        const uploadPromises = Array.from(files).map(async (file) => {
+// FIX: Add explicit type `File` to the mapped `file` variable to resolve property access errors.
+        const uploadPromises = Array.from(files).map(async (file: File) => {
             if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
                 addToast(`Tệp "${file.name}" quá lớn (tối đa ${MAX_FILE_SIZE_MB}MB) và sẽ bị bỏ qua.`, 'warning');
                 return;
@@ -454,7 +455,8 @@ ${JSON.stringify(imageMetadata.slice(0, 200))}
         setIsProcessingAvatars(false);
     };
 
-    const sortedCategories = Array.from(categories.keys()).sort((a, b) => a.localeCompare(b, 'vi'));
+// FIX: Add explicit string types to the sort callback arguments to resolve `localeCompare` error on `unknown`.
+    const sortedCategories = Array.from(categories.keys()).sort((a: string, b: string) => a.localeCompare(b, 'vi'));
 
     return (
         <>
@@ -549,7 +551,8 @@ ${JSON.stringify(imageMetadata.slice(0, 200))}
                     image={imageToEdit}
                     onClose={() => setImageToEdit(null)}
                     onSave={handleManualUpdate}
-                    allCategories={Array.from(categories.keys())}
+// FIX: Cast the result of `Array.from` to `string[]` to satisfy the prop type.
+                    allCategories={Array.from(categories.keys()) as string[]}
                 />
             )}
 

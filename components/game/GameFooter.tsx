@@ -285,7 +285,7 @@ export const GameFooter = React.memo(({
         
         return (
             <>
-                {mainActions.length > 1 && <button className="action-slider-nav" onClick={handlePrevAction}>‹</button>}
+                {mainActions.length > 1 && <button className="action-slider-nav" onClick={handlePrevAction} aria-label="Hành động trước">‹</button>}
                 <div 
                     className="action-slider-content"
                     onTouchStart={handleTouchStart}
@@ -323,7 +323,7 @@ export const GameFooter = React.memo(({
                         )}
                     </button>
                 </div>
-                {mainActions.length > 1 && <button className="action-slider-nav" onClick={handleNextAction}>›</button>}
+                {mainActions.length > 1 && <button className="action-slider-nav" onClick={handleNextAction} aria-label="Hành động kế tiếp">›</button>}
             </>
         )
     };
@@ -352,12 +352,13 @@ export const GameFooter = React.memo(({
                             onChange={(e) => { setCustomAction(e.target.value); setActionAnalysis(null); }}
                             onKeyPress={(e) => e.key === 'Enter' && handleActionClick({ description: customAction }, true)}
                             disabled={isProcessing}
+                            aria-label="Nhập hành động tùy chỉnh"
                         />
                          <button 
                             className="analyze-button-inline" 
                             onClick={onAnalyzeAction} 
                             disabled={!customAction.trim() || isProcessing || gameState.isIntercourseScene || isAnalyzing}
-                            title="Phân tích hành động (Dùng AI)"
+                            aria-label="Phân tích hành động bằng AI"
                         >
                             {isAnalyzing ? <span className="spinner spinner-sm"></span> : '✨'}
                         </button>
@@ -366,7 +367,7 @@ export const GameFooter = React.memo(({
                         className="send-action-button" 
                         onClick={() => handleActionClick({ description: customAction }, true)} 
                         disabled={!customAction.trim() || isProcessing}
-                        title="Gửi hành động"
+                        aria-label="Gửi hành động tùy chỉnh"
                     >
                         <SendIcon />
                     </button>
@@ -375,7 +376,7 @@ export const GameFooter = React.memo(({
                             className="turn-mod-button more-actions-button"
                             onClick={() => setIsMoreActionsMenuOpen(prev => !prev)}
                             disabled={isProcessing}
-                            title="Hành động khác"
+                            aria-label="Mở menu hành động khác"
                         >
                             <MoreIcon />
                         </button>
@@ -401,7 +402,7 @@ export const GameFooter = React.memo(({
                 </div>
 
                 {actionAnalysis && (
-                    <div className="action-analysis-container">
+                    <div className="action-analysis-container" role="status">
                          <div className="analysis-details">
                             <strong className="benefit">Lợi:</strong> <InlineStoryRenderer text={actionAnalysis.benefit} gameState={gameState} onEntityClick={onEntityClick} onEntityMouseEnter={onEntityMouseEnter} onEntityMouseLeave={onEntityMouseLeave}/>
                             <br/>
@@ -424,10 +425,12 @@ export const GameFooter = React.memo(({
             )}
 
             {(isProcessing && !isAnalyzing) && (
-                <div className="loading-indicator turn-processing-container">
+                <div className="loading-indicator turn-processing-container" role="status" aria-atomic="true">
                     <div className="turn-processing-progress">
                         <span className="loading-message">{loadingMessage}</span>
-                        <div className="progress-bar-container"><div className="progress-bar" style={{ width: `${turnCreationProgress}%` }}></div></div>
+                        <div className="progress-bar-container" role="progressbar" aria-valuenow={turnCreationProgress} aria-valuemin={0} aria-valuemax={100} aria-valuetext={`Đang xử lý: ${Math.round(turnCreationProgress)}%`}>
+                            <div className="progress-bar" style={{ width: `${turnCreationProgress}%` }}></div>
+                        </div>
                         <div className="progress-details">
                             <span>{turnCreationTimeElapsed.toFixed(1)}s / ~{estimatedDuration}s</span>
                         </div>
@@ -436,7 +439,7 @@ export const GameFooter = React.memo(({
             )}
             
              {error && ( 
-                <div className="error-message">
+                <div className="error-message" role="alert">
                     <span>{error}</span>
                     <div className="error-actions">
                         <button onClick={onRetry} className="error-action-button fix-button" aria-label="Thử lại hành động trước"><RetryIcon/></button>
