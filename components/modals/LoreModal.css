@@ -1,0 +1,115 @@
+/* Lore Modal (Redesigned) */
+.lore-description {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0 0 1.5rem;
+    padding: 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+}
+
+/* --- Standardized Buttons --- */
+.lore-button {
+    padding: 0.7rem 1.2rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease-out;
+}
+.lore-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.lore-button.add-new {
+    background: var(--button-primary-bg);
+    color: var(--text-on-accent);
+    text-shadow: var(--button-primary-text-shadow);
+    width: 100%;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+.lore-button.add-new:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.lore-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.lore-item {
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+}
+.lore-textarea {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.lore-item-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.lore-active-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+}
+
+.lore-button.delete {
+    background: transparent;
+    color: var(--accent-danger);
+    border-color: var(--accent-danger);
+    padding: 0.4rem 0.8rem;
+}
+.lore-button.delete:hover {
+    background: var(--accent-danger);
+    color: white;
+}
+
+.lore-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-primary);
+}
+.lore-file-actions, .lore-main-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+.lore-button.file-action {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-primary);
+}
+.lore-button.file-action:hover {
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+.lore-button.cancel {
+    background: var(--bg-interactive);
+    color: var(--text-primary);
+    border: 1px solid var(--border-primary);
+}
+.lore-button.cancel:hover {
+     border-color: var(--accent-secondary);
+}
+
+.lore-button.save-apply {
+    background: var(--accent-primary);
+    color: var(--text-on-accent);
+}
+.lore-button.save-apply:hover {
+    filter: brightness(1.1);
+}

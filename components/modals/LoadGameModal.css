@@ -1,0 +1,182 @@
+/* Load Game Modal Redesign */
+.load-game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-primary);
+}
+.load-game-title {
+    font-size: var(--font-size-lg);
+    color: var(--text-primary);
+    margin: 0;
+}
+.load-game-header-actions {
+    display: flex;
+    gap: 1rem;
+}
+.load-game-upload-button, .load-game-back-button {
+    background: var(--bg-interactive);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-primary);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    box-shadow: var(--shadow-sm);
+}
+.load-game-upload-button:hover:not(:disabled), .load-game-back-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background: var(--bg-interactive-hover);
+    border-color: var(--accent-secondary);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-hover);
+}
+.no-saves-message {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 3rem 1rem;
+    font-size: var(--font-size-base);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: subtle-fade-in 0.5s ease-out;
+}
+.no-saves-message::before {
+    content: '📁';
+    font-size: 2.5rem;
+    opacity: 0.5;
+}
+.saves-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    animation: subtle-fade-in 0.3s ease-out;
+}
+.saves-section-title {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-primary);
+}
+.saves-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+.save-card {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-primary);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    animation: slide-up-fade-in 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.save-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-secondary);
+    box-shadow: var(--shadow-md);
+}
+
+.save-card-content {
+    padding: 1.25rem 1.5rem;
+    flex-grow: 1;
+}
+
+.save-card-slot {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: var(--bg-interactive);
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+}
+.save-card-name {
+    margin: 0 0 0.5rem;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.save-card-meta {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.save-card-footer {
+    background: rgba(var(--rgb-bg-primary), 0.3);
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.save-card-actions-secondary {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.save-card-actions-secondary button {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: var(--space-2);
+    border-radius: var(--radius-sm);
+}
+
+.save-card-actions-secondary button:hover {
+    background: var(--bg-interactive);
+    color: var(--text-primary);
+}
+
+.save-card-actions-secondary button.danger:hover {
+    background: var(--accent-danger);
+    color: var(--text-on-accent);
+}
+
+.btn-load {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+    background: var(--button-primary-bg);
+    color: var(--text-on-accent);
+    text-shadow: var(--button-primary-text-shadow);
+}
+
+.btn-load:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+    filter: brightness(1.1);
+}
+
+
+@media (max-width: 768px) {
+    .load-game-header { flex-direction: column; gap: 1rem; }
+    .saves-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,174 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+/* --- Combatant HUD Cards (Replaces old .combatant-card styles) --- */
+.combatant-card {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 380px;
+    background-color: rgba(var(--rgb-bg-secondary), 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 1rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-md);
+    animation: combat-view-fade-in 0.5s ease-out;
+}
+
+.combatant-card.enemy {
+    flex-direction: row-reverse;
+}
+
+.combatant-avatar-large {
+    width: 90px;
+    height: 90px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--border-primary);
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    overflow: hidden;
+    background-color: var(--bg-interactive);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.combatant-card.player .combatant-avatar-large { border-color: var(--accent-pc); }
+.combatant-card.enemy .combatant-avatar-large { border-color: var(--accent-danger); }
+
+.combatant-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.combatant-info-large {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow: hidden; /* Prevent long names from breaking layout */
+}
+.combatant-card.enemy .combatant-info-large {
+    text-align: right;
+}
+
+.combatant-nameplate {
+    margin-bottom: 0.25rem;
+}
+
+.combatant-name-large {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.combatant-title-large {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* NEW: Container for resource bars */
+.combat-resource-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.combatant-health-info {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+}
+.combatant-card.enemy .combatant-health-info {
+    grid-template-columns: auto 1fr;
+}
+
+
+.combatant-health-bar-wrapper-large {
+    height: 12px;
+    background-color: rgba(var(--rgb-bg-primary), 0.5);
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+    overflow: hidden;
+}
+.combatant-card.enemy .combatant-health-bar-wrapper-large {
+    order: 2;
+}
+
+.combatant-health-bar-large {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+/* Health Bar Colors */
+.combatant-card.player .combatant-health-bar-large { background: linear-gradient(to right, var(--accent-success), #86efac); }
+.combatant-card.enemy .combatant-health-bar-large { background: linear-gradient(to right, var(--accent-danger), #fca5a5); }
+
+/* Mana/LinhLuc Bar */
+.combatant-health-bar-wrapper-large.mana-bar .combatant-health-bar-large {
+    background: linear-gradient(to right, var(--accent-npc), #93c5fd);
+}
+.combatant-card.enemy .mana-bar .combatant-health-bar-large {
+    background: linear-gradient(to right, var(--accent-monster), #c4b5fd);
+}
+
+.health-bar-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-25deg);
+    animation: health-shine 3s infinite ease-in-out;
+}
+@keyframes health-shine {
+    from { left: -100%; }
+    to { left: 200%; }
+}
+
+.combatant-health-text-large {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.8rem;
+    min-width: 60px; /* Ensure consistent width */
+    text-align: right;
+}
+.combatant-card.enemy .combatant-health-text-large {
+    order: 1;
+    text-align: left;
+}
+
+.combatant-statuses-large {
+    min-height: 24px;
+    margin-top: 0.25rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+}
+.combatant-card.enemy .combatant-statuses-large {
+    justify-content: flex-end;
+}
+
+@media (max-width: 1024px) {
+    .combatant-card {
+        flex-direction: row;
+        max-width: 450px;
+    }
+}

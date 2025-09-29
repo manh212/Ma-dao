@@ -1,0 +1,110 @@
+/* Sect Store Modal */
+.sect-store-modal {
+    max-width: var(--modal-width-lg);
+}
+
+.sect-store-user-info {
+    padding: 0 var(--space-6) var(--space-4);
+    font-size: var(--font-size-md);
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: var(--space-2);
+    color: var(--text-secondary);
+}
+
+.contribution-points-value {
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+    color: var(--accent-success);
+}
+
+.sect-store-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.sect-store-item {
+    background-color: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-primary);
+    padding: var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-6);
+}
+
+.sect-store-item-info {
+    flex-grow: 1;
+}
+
+.item-info-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+}
+
+.item-info-name {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.item-info-type {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    color: var(--text-on-accent);
+    text-transform: uppercase;
+}
+.item-info-type.type-item {
+    background-color: var(--accent-npc);
+}
+.item-info-type.type-skill {
+    background-color: var(--accent-loc);
+}
+
+.item-info-desc {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.sect-store-item-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+}
+
+.item-info-cost {
+    font-weight: 600;
+    font-size: var(--font-size-base);
+    color: var(--accent-success);
+}
+
+.item-purchase-button {
+    padding: var(--space-2) var(--space-5);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    background-color: var(--accent-primary);
+    color: var(--text-on-accent);
+    border: none;
+}
+.item-purchase-button:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+.item-purchase-button:disabled {
+    background-color: var(--bg-interactive);
+    color: var(--text-muted);
+    cursor: not-allowed;
+}

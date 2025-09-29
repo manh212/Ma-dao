@@ -1,0 +1,116 @@
+/* Memory Modal (Redesigned) */
+.memory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.memory-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* Add gap between items */
+}
+.memory-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-tertiary);
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.memory-item:hover {
+    background-color: var(--bg-interactive);
+    border-color: var(--border-primary);
+}
+
+.memory-text {
+    flex-grow: 1;
+    font-style: italic;
+    margin-right: 1rem;
+    color: var(--text-secondary);
+}
+.memory-item-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Unified Action Buttons */
+.memory-pin-button, .memory-delete-button {
+    padding: 6px var(--space-3);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.memory-pin-button {
+    background-color: var(--bg-interactive);
+    color: var(--text-secondary);
+}
+.memory-pin-button:hover {
+    background-color: var(--bg-interactive-hover);
+    color: var(--text-primary);
+    border-color: var(--accent-secondary);
+    transform: translateY(-1px);
+}
+.memory-pin-button.pinned {
+    background: var(--accent-secondary);
+    color: white;
+    border-color: transparent;
+}
+.memory-pin-button.pinned:hover {
+    filter: brightness(1.1);
+}
+
+
+.memory-delete-button {
+    background: transparent;
+    color: var(--accent-danger);
+    border-color: var(--accent-danger);
+}
+.memory-delete-button:hover:not(:disabled) {
+    background-color: var(--accent-danger);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.no-memories-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+}
+
+.memory-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--border-primary);
+}
+
+/* Use a more specific, but consistent, button style for the footer */
+.memory-footer-button {
+    padding: 0.7rem 1.4rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.9rem;
+    background: var(--bg-interactive);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-sm);
+}
+.memory-footer-button:hover {
+    background: var(--bg-interactive-hover);
+    color: var(--text-primary);
+    border-color: var(--accent-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
