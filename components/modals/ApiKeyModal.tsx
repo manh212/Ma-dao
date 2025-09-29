@@ -220,18 +220,7 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
                     <button onClick={handleCloseAndSave} className="modal-close-button" aria-label="Đóng">×</button>
                 </header>
                 <div className="modal-body api-key-modal-body">
-                     <div className="api-key-guide">
-                        <h5>Cách Lấy API Key Miễn Phí</h5>
-                        <ol>
-                            <li>Truy cập <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio</a> và đăng nhập.</li>
-                            <li>Nhấn vào "<strong>Create API key</strong>" và sao chép khóa vừa tạo.</li>
-                            <li>Dán khóa vào ô bên dưới. Bạn có thể thêm nhiều khóa để dự phòng.</li>
-                        </ol>
-                         <p style={{marginTop: '1rem', fontSize: '0.8rem'}}><strong>Lưu ý:</strong> Trò chơi này yêu cầu API Key của Google Gemini để hoạt động.</p>
-                    </div>
-                    
                     <section className="api-key-section">
-                        <h4 className="api-key-section-title">DANH SÁCH KHÓA API CỦA BẠN</h4>
                         <ul className="api-key-list">
                             {configs.map((config, index) => {
                                 const statusInfo = keyStatuses.get(config.id) || { status: 'unchecked' };
@@ -278,9 +267,6 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
                                 );
                             })}
                         </ul>
-                        <p className="api-key-paste-tip">
-                            Mẹo: Bạn có thể dán nhiều khóa cùng lúc (phân tách bằng dấu phẩy, dấu cách hoặc xuống dòng).
-                        </p>
                         <button 
                             className="api-key-add-btn" 
                             onClick={handleAddKey}

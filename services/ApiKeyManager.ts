@@ -10,9 +10,13 @@ interface ApiConfig {
     provider?: 'gemini' | 'other';
 }
 
+// The default key is a fallback from environment variables.
+const DEFAULT_API_KEY = process.env.API_KEY;
+
 const ApiKeyManager = {
   keys: [] as string[],
   currentIndex: 0,
+  isUsingDefault: false,
   
   loadKeys: function() {
     let configs: ApiConfig[] = [];
@@ -35,11 +39,22 @@ const ApiKeyManager = {
       }
     }
     
-    this.keys = configs
+    const personalKeys = configs
         .map(c => c.key?.trim()) // Safely access key and trim
         .filter((key): key is string => !!key); // Filter out empty or undefined keys
     
     this.currentIndex = 0;
+
+    if (personalKeys.length > 0) {
+        this.keys = personalKeys;
+        this.isUsingDefault = false;
+    } else if (DEFAULT_API_KEY) {
+        this.keys = [DEFAULT_API_KEY];
+        this.isUsingDefault = true;
+    } else {
+        this.keys = [];
+        this.isUsingDefault = false;
+    }
   },
   
   getKey: function(): string | null {
@@ -59,7 +74,7 @@ const ApiKeyManager = {
   getAiClient: function() {
     const key = this.getKey();
     if (!key) {
-        throw new Error("Không có API Key nào của Google Gemini được cấu hình. Vui lòng thêm key trong Thiết lập API Key.");
+        throw new Error("Không có API Key nào được cấu hình. Vui lòng thêm key cá nhân hoặc đảm bảo API Key mặc định được thiết lập.");
     }
     return new GoogleGenAI({ apiKey: key });
   },
@@ -71,7 +86,7 @@ const ApiKeyManager = {
     options?: { safetySettings?: any[] }
   ): Promise<GenerateContentResponse> {
     const maxKeyAttempts = this.keys.length > 0 ? this.keys.length : 1;
-    let lastError: any = new Error("Không thể thực hiện yêu cầu API.");
+    let lastError: any = new Error("Không thể thực hiện yêu cầu API. Vui lòng kiểm tra API Key của bạn.");
 
     for (let keyAttempt = 0; keyAttempt < maxKeyAttempts; keyAttempt++) {
         const maxRetries = 2; // 1 initial + 2 retries

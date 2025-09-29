@@ -157,10 +157,13 @@ const AppContent = () => {
 
     const getApiStatusText = useCallback(() => {
         const hasKey = !!ApiKeyManager.getKey();
+        if (ApiKeyManager.isUsingDefault) {
+            return 'Đang dùng API Key mặc định. Thêm key cá nhân để tối ưu.';
+        }
         if (hasKey) {
             const geminiKeys = ApiKeyManager.keys;
             const currentIndex = ApiKeyManager.getCurrentIndex();
-            return `Đang dùng API Key Gemini ${currentIndex + 1}/${geminiKeys.length}.`;
+            return `Đang dùng API Key cá nhân ${currentIndex + 1}/${geminiKeys.length}.`;
         } else {
             return 'Vui lòng thiết lập API Key để chơi.';
         }
