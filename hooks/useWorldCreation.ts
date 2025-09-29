@@ -20,6 +20,7 @@ import {
     INITIAL_CHARACTERS_SCHEMA,
     SCENE_WRITING_SCHEMA,
     WORLD_ENRICHMENT_SCHEMA,
+    LORE_RULES_SCHEMA
 } from '../constants/schemas/creation';
 import { GEMINI_FLASH } from '../constants/aiConstants';
 import type { WorldSettings, GameState, Character as CharType, Quest, AppSettings, CanonEvent } from '../types';
@@ -115,20 +116,128 @@ export const useWorldCreation = ({
     }, []);
 
     const handleAnalyzeFanfic = useCallback(async (fanficContent: string) => {
-        // Implementation remains the same as before
-    }, [formData, addToast, incrementApiRequestCount, handleGenericAiError, setFormData]);
+        if (isAnalyzingFanfic) return;
+        setIsAnalyzingFanfic(true);
+        setError(null);
+        setFanficAnalysisResult(null); // Clear previous results
+    
+        const prompt = `**VAI TRÒ:** Bạn là một AI phân tích văn học, chuyên gia tóm tắt và cấu trúc hóa các câu chuyện Đồng nhân (Fanfiction).
+    **NHIỆM VỤ:** Đọc kỹ đoạn văn bản Đồng nhân được cung cấp và trích xuất các thông tin quan trọng theo schema JSON.
+    ---
+    **VĂN BẢN ĐỒNG NHÂN:**
+    """
+    ${fanficContent.substring(0, 30000)}
+    """
+    ---
+    **MỆNH LỆNH PHÂN TÍCH:**
+    1.  **Tiêu đề (title):** Đặt một tiêu đề hấp dẫn cho câu chuyện.
+    2.  **Tóm tắt Thế giới (worldSummary):** Tóm tắt bối cảnh và tiền đề chính trong 2-3 câu.
+    3.  **Nhân vật chính (mainCharacter):** Xác định và mô tả nhân vật chính trong nguyên tác.
+    4.  **Dòng thời gian Nguyên tác (canonTimeline):** Xác định 5-7 sự kiện cốt lõi, quan trọng nhất của câu chuyện theo thứ tự thời gian.
+    5.  **Gợi ý Vai trò (suggestedRoles):** Đề xuất 3 vai trò khởi đầu thú vị cho người chơi.
+    ---
+    **ĐỊNH DẠNG ĐẦU RA:** Trả về một đối tượng JSON hợp lệ theo schema được cung cấp.`;
+    
+        try {
+            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt, config: { responseMimeType: 'application/json', responseSchema: FANFIC_ANALYSIS_SCHEMA } }, addToast, incrementApiRequestCount);
+            const result: FanficAnalysisResult = JSON.parse(response.text?.trim() || '{}');
+            if (isMounted.current) {
+                setFanficAnalysisResult(result);
+                // Also update the main form data with extracted info
+                setFormData(prev => ({
+                    ...prev,
+                    idea: result.title || prev.idea,
+                    details: result.worldSummary || prev.details,
+                    name: result.mainCharacter.name, // Suggest the canon character name
+                    species: result.mainCharacter.species,
+                    gender: result.mainCharacter.gender,
+                    backstory: result.mainCharacter.description,
+                    canonTimeline: result.canonTimeline, // Store the timeline
+                    canonStory: fanficContent, // Store the full story
+                }));
+                addToast("Phân tích Đồng nhân thành công!", 'success');
+            }
+        } catch (err) {
+            handleGenericAiError(err, "phân tích Đồng nhân");
+        } finally {
+            if (isMounted.current) setIsAnalyzingFanfic(false);
+        }
+    }, [isAnalyzingFanfic, addToast, incrementApiRequestCount, handleGenericAiError, setFormData, setFanficAnalysisResult]);
 
     const handleSuggestContext = useCallback(async () => {
-        // Implementation remains the same as before
-    }, [isGeneratingContext, formData, setFormData, addToast, incrementApiRequestCount, handleGenericAiError]);
+        if (isGeneratingContext) return;
+        setIsGeneratingContext(true);
+        setError(null);
+    
+        const prompt = `**VAI TRÒ:** Bạn là một người xây dựng thế giới (World Builder) AI.
+    **NHIỆM VỤ:** Dựa trên ý tưởng cốt lõi, hãy viết một đoạn "Tổng Quan Về Thế Giới" (details) chi tiết và hấp dẫn (khoảng 3-4 đoạn văn).
+    ---
+    **THÔNG TIN CỐT LÕI:**
+    - **Kiểu Thế Giới (Genre):** ${formData.genre}
+    - **Bối Cảnh (Setting):** ${formData.setting}
+    - **Ý Tưởng Khởi Đầu (Idea):** ${formData.idea}
+    ---
+    **YÊU CẦU:**
+    1.  Mô tả về lịch sử, địa lý, các phe phái chính, và các quy luật đặc biệt (phép thuật, công nghệ) của thế giới.
+    2.  Văn phong phải phù hợp với Kiểu Thế Giới đã chọn.
+    3.  Nội dung phải sáng tạo và khơi gợi trí tưởng tượng.
+    4.  KHÔNG trả về JSON, chỉ trả về một chuỗi văn bản thuần túy (plain text).`;
+    
+        try {
+            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt }, addToast, incrementApiRequestCount);
+            if (isMounted.current) {
+                setFormData(prev => ({ ...prev, details: response.text?.trim() || '' }));
+                addToast("Đã tạo tổng quan thế giới bằng AI!", 'success');
+            }
+        } catch (err) {
+            handleGenericAiError(err, "gợi ý tổng quan thế giới");
+        } finally {
+            if (isMounted.current) setIsGeneratingContext(false);
+        }
+    }, [isGeneratingContext, formData.genre, formData.setting, formData.idea, setFormData, addToast, incrementApiRequestCount, handleGenericAiError]);
 
     const handleSuggestCharacter = useCallback(async () => {
-        // Implementation remains the same as before
+        // This function is not currently used by any UI element.
     }, []);
 
     const handleSuggestLoreRules = useCallback(async (ruleCount: number | null) => {
-        // Implementation remains the same as before
-    }, []);
+        if (isGeneratingLoreRules) return;
+        setIsGeneratingLoreRules(true);
+        setError(null);
+    
+        const prompt = `**VAI TRÒ:** Bạn là một người thiết kế luật chơi (Game Rule Designer) AI.
+    **NHIỆM VỤ:** Dựa trên bối cảnh thế giới, hãy tạo ra ${ruleCount || 5} "Luật Lệ" (Lore Rules) thú vị và độc đáo.
+    ---
+    **BỐI CẢNH THẾ GIỚI:**
+    - **Kiểu Thế Giới (Genre):** ${formData.genre}
+    - **Bối Cảnh (Setting):** ${formData.setting}
+    - **Ý Tưởng (Idea):** ${formData.idea}
+    - **Tổng quan (Details):** ${formData.details}
+    ---
+    **YÊU CẦU:**
+    1.  Các luật lệ phải sáng tạo, ảnh hưởng đến lối chơi hoặc câu chuyện.
+    2.  Luật lệ có thể về hệ thống phép thuật, các quy tắc xã hội, các vật phẩm đặc biệt, hoặc các sự kiện lịch sử quan trọng.
+    3.  KHÔNG tạo các luật lệ đã có sẵn trong các trò chơi phổ biến một cách nhàm chán.
+    4.  Trả về một đối tượng JSON với một mảng chuỗi string trong trường "rules".`;
+        
+        try {
+            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt, config: { responseMimeType: "application/json", responseSchema: LORE_RULES_SCHEMA } }, addToast, incrementApiRequestCount);
+            const result = JSON.parse(response.text?.trim() || '{}');
+            if (isMounted.current && result.rules && Array.isArray(result.rules)) {
+                const newRules = result.rules.map((text: string) => ({
+                    id: generateUniqueId('lore'),
+                    text,
+                    isActive: true
+                }));
+                setFormData(prev => ({ ...prev, loreRules: [...prev.loreRules, ...newRules] }));
+                addToast(`Đã tạo ${newRules.length} luật lệ mới bằng AI!`, 'success');
+            }
+        } catch (err) {
+            handleGenericAiError(err, "gợi ý luật lệ");
+        } finally {
+            if (isMounted.current) setIsGeneratingLoreRules(false);
+        }
+    }, [isGeneratingLoreRules, formData.genre, formData.setting, formData.idea, formData.details, setFormData, addToast, incrementApiRequestCount, handleGenericAiError]);
 
     const handleCreateWorld = useCallback(async (creationData: WorldSettings, selectedRole?: string | null) => {
         try {

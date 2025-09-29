@@ -115,12 +115,31 @@ export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount }
         addToast("Biểu mẫu đã được làm mới.", 'info');
     };
 
+    const isMounted = useRef(true);
+    useEffect(() => { isMounted.current = true; return () => { isMounted.current = false; }; }, []);
+    const handleGenericAiError = useCallback((error: unknown, context: string) => { if (isMounted.current) { addToast(getApiErrorMessage(error, context), 'error'); } }, [addToast]);
+
     const handleSuggest = useCallback(async (type: 'idea' | 'backstory') => {
         setIsSuggesting(type);
         const suggestionsKey = type === 'idea' ? formData.genre : formData.personalityOuter;
         const suggestionsMap = type === 'idea' ? IDEA_SUGGESTIONS : BACKSTORY_SUGGESTIONS;
         const baseSuggestion = suggestionsMap[suggestionsKey] || suggestionsMap['default'];
-        const prompt = `**VAI TRÒ:** Bạn là một người cố vấn sáng tạo... (prompt shortened)`;
+        
+        const contextInfo = type === 'idea' 
+            ? `Kiểu thế giới: "${formData.genre}", Bối cảnh: "${formData.setting}"`
+            : `Tính cách nhân vật: "${formData.personalityOuter}"`;
+    
+        const prompt = `**VAI TRÒ:** Bạn là một người cố vấn sáng tạo, chuyên gia gợi ý ý tưởng cho việc xây dựng thế giới và nhân vật trong game.
+    **NHIỆM VỤ:** Dựa vào bối cảnh được cung cấp và một gợi ý cơ bản, hãy tạo ra **BA (3)** gợi ý mới, độc đáo và hấp dẫn.
+    **BỐI CẢNH:** ${contextInfo}.
+    **GỢI Ý CƠ BẢN (để tham khảo phong cách):** "${baseSuggestion[0]}"
+    **YÊU CẦU:**
+    1.  Các gợi ý phải đa dạng và khơi gợi trí tưởng tượng.
+    2.  Không lặp lại gợi ý cơ bản.
+    3.  Mỗi gợi ý phải là một chuỗi string hoàn chỉnh.
+    4.  Toàn bộ các gợi ý phải bằng tiếng Việt.
+    5.  Trả về kết quả dưới dạng một đối tượng JSON duy nhất, tuân thủ nghiêm ngặt schema đã cho.`;
+    
         try {
             const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt, config: { responseMimeType: "application/json", responseSchema: SUGGESTIONS_SCHEMA } }, addToast, incrementApiRequestCount);
             const result = JSON.parse(response.text?.trim() || '{}');
@@ -133,11 +152,7 @@ export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount }
         } finally {
             if (isMounted.current) setIsSuggesting(null);
         }
-    }, [formData.genre, formData.setting, formData.personalityOuter, addToast, incrementApiRequestCount]);
-    
-    const isMounted = useRef(true);
-    useEffect(() => { isMounted.current = true; return () => { isMounted.current = false; }; }, []);
-    const handleGenericAiError = useCallback((error: unknown, context: string) => { if (isMounted.current) { addToast(getApiErrorMessage(error, context), 'error'); } }, [addToast]);
+    }, [formData.genre, formData.setting, formData.personalityOuter, addToast, incrementApiRequestCount, handleGenericAiError]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
