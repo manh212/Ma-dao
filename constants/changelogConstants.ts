@@ -13,6 +13,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG_DATA: ChangelogEntry[] = [
   {
+    version: "v1.7.2",
+    date: "Tháng 8, 2024",
+    changes: [
+      { type: 'fix', description: "Thêm một lớp xác thực đầu vào để ngăn chặn các lệnh gọi API không hợp lệ và cải thiện độ ổn định." },
+      { type: 'improvement', description: "Trình xác thực chủ động kiểm tra các lỗi phổ biến như schema không hợp lệ hoặc các công cụ xung đột, cung cấp phản hồi lỗi rõ ràng hơn." },
+    ],
+  },
+  {
     version: "v1.7.1",
     date: "Tháng 8, 2024",
     changes: [

@@ -28,6 +28,7 @@ const getGenreConfig = (worldSettings: WorldSettings): GenreConfig => {
 export const ArtisticLoadingOverlay = ({ worldSettings, message, progress, timeElapsed, estimatedTime }: ArtisticLoadingOverlayProps) => {
     const { messages } = useMemo(() => getGenreConfig(worldSettings), [worldSettings]);
     const [dynamicMessage, setDynamicMessage] = useState(messages[0]);
+    const [announcedProgress, setAnnouncedProgress] = useState(0);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -40,14 +41,25 @@ export const ArtisticLoadingOverlay = ({ worldSettings, message, progress, timeE
         return () => clearInterval(interval);
     }, [messages]);
 
+    useEffect(() => {
+        const currentProgressTenPercentStep = Math.floor(progress / 10);
+        const announcedTenPercentStep = Math.floor(announcedProgress / 10);
+
+        if (currentProgressTenPercentStep > announcedTenPercentStep) {
+            setAnnouncedProgress(progress);
+        }
+    }, [progress, announcedProgress]);
+
+
     const timeRemaining = Math.max(0, estimatedTime - timeElapsed);
+    const announcedProgressText = `Đang tạo thế giới: ${Math.floor(announcedProgress / 10) * 10}%`;
 
     return (
         <div className={`artistic-loading-overlay`}>
-            <div className="artistic-loading-content" role="status" aria-live="polite">
+            <div className="artistic-loading-content" role="status" aria-live="polite" aria-atomic="false">
                 <div className="artistic-loading-text">
                     <p className="primary-message">{message}</p>
-                    <p className="secondary-message">{dynamicMessage}</p>
+                    <p className="secondary-message" aria-hidden="true">{dynamicMessage}</p>
                 </div>
                 
                 <div 
@@ -56,16 +68,12 @@ export const ArtisticLoadingOverlay = ({ worldSettings, message, progress, timeE
                     aria-valuenow={progress} 
                     aria-valuemin={0} 
                     aria-valuemax={100}
-                    aria-valuetext={`Đang tạo thế giới: ${Math.round(progress)}%`}
+                    aria-valuetext={announcedProgressText}
                 >
                    <span>{`[${'#'.repeat(Math.floor(progress/5)).padEnd(20, '-')}]`}</span>
                 </div>
                 
-                <div className="artistic-loading-stats">
-                    <div className="artistic-stat">
-                        <span className="stat-value">{Math.round(progress)}%</span>
-                        <span className="stat-label">Tiến độ</span>
-                    </div>
+                <div className="artistic-loading-stats" aria-hidden="true">
                     <div className="artistic-stat">
                         <span className="stat-value">{timeElapsed.toFixed(1)}s</span>
                         <span className="stat-label">Đã trôi qua</span>

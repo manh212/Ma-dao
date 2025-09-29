@@ -110,6 +110,7 @@ export const GameFooter = React.memo(({
     const [processingActionId, setProcessingActionId] = useState<string | null>(null);
     const [isMoreActionsMenuOpen, setIsMoreActionsMenuOpen] = useState(false);
     const moreActionsRef = useRef<HTMLDivElement>(null);
+    const [announcedProgress, setAnnouncedProgress] = useState(0);
     
     // Mobile Action Slider State
     const [currentActionIndex, setCurrentActionIndex] = useState(0);
@@ -128,6 +129,19 @@ export const GameFooter = React.memo(({
         }
     }, [isProcessing]);
     
+     useEffect(() => {
+        if (isProcessing && !isAnalyzing) {
+            const currentProgressTenPercentStep = Math.floor(turnCreationProgress / 10);
+            const announcedTenPercentStep = Math.floor(announcedProgress / 10);
+
+            if (currentProgressTenPercentStep > announcedTenPercentStep) {
+                setAnnouncedProgress(turnCreationProgress);
+            }
+        } else if (announcedProgress !== 0) {
+            setAnnouncedProgress(0);
+        }
+    }, [turnCreationProgress, isProcessing, isAnalyzing, announcedProgress]);
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (moreActionsRef.current && !moreActionsRef.current.contains(event.target as Node)) {
@@ -171,6 +185,7 @@ export const GameFooter = React.memo(({
     const estimatedDuration = gameState.isIntercourseScene ? 12 : (settings.aiProcessingMode === 'quality' ? 24 : 12);
     
     const isEffectivelyCollapsed = !areActionsVisible && !isProcessing && !error;
+    const announcedProgressText = `Đang xử lý: ${Math.floor(announcedProgress / 10) * 10}%`;
 
     // --- Mobile Slider Logic ---
     const handleNextAction = useCallback(() => {
@@ -427,13 +442,20 @@ export const GameFooter = React.memo(({
             )}
 
             {(isProcessing && !isAnalyzing) && (
-                <div className="loading-indicator turn-processing-container" role="status" aria-atomic="true">
+                <div className="loading-indicator turn-processing-container" role="status" aria-atomic="false">
                     <div className="turn-processing-progress">
-                        <span className="loading-message">{loadingMessage}</span>
-                        <div className="progress-bar-container" role="progressbar" aria-valuenow={turnCreationProgress} aria-valuemin={0} aria-valuemax={100} aria-valuetext={`Đang xử lý: ${Math.round(turnCreationProgress)}%`}>
+                        <span className="loading-message" aria-hidden="true">{loadingMessage}</span>
+                        <div 
+                            className="progress-bar-container" 
+                            role="progressbar" 
+                            aria-valuenow={turnCreationProgress} 
+                            aria-valuemin={0} 
+                            aria-valuemax={100} 
+                            aria-valuetext={announcedProgressText}
+                        >
                             <div className="progress-bar" style={{ width: `${turnCreationProgress}%` }}></div>
                         </div>
-                        <div className="progress-details">
+                        <div className="progress-details" aria-hidden="true">
                             <span>{turnCreationTimeElapsed.toFixed(1)}s / ~{estimatedDuration}s</span>
                         </div>
                     </div>

@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import { GoogleGenAI, GenerateContentParameters, GenerateContentResponse } from "@google/genai";
+import { validateRequestParameters } from './promptValidator';
 
 interface ApiConfig {
     key: string;
@@ -85,6 +86,14 @@ const ApiKeyManager = {
     incrementRequestCount: () => void,
     options?: { safetySettings?: any[] }
   ): Promise<GenerateContentResponse> {
+    const validation = validateRequestParameters(params);
+    if (!validation.isValid) {
+        const errorMessage = validation.error || "Lỗi xác thực yêu cầu API.";
+        console.error("API Request Validation Failed:", errorMessage, "Parameters:", params);
+        addToast(errorMessage, 'error');
+        throw new Error(errorMessage);
+    }
+      
     const maxKeyAttempts = this.keys.length > 0 ? this.keys.length : 1;
     let lastError: any = new Error("Không thể thực hiện yêu cầu API. Vui lòng kiểm tra API Key của bạn.");
 

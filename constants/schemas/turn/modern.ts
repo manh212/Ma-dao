@@ -4,7 +4,8 @@
 */
 import { Type } from "@google/genai";
 import { TURN_DELTAS_COMMON_SCHEMA } from './common';
-import { CHARACTER_SCHEMA, JOB_SCHEMA, ASSET_SCHEMA } from '../character';
+import { JOB_SCHEMA, ASSET_SCHEMA, CHARACTER_STATS_SCHEMA, MOOD_SCHEMA } from '../character';
+import { ITEM_SCHEMA } from '../item';
 
 const modernProperties = {
     jobChange: {
@@ -25,10 +26,28 @@ const modernProperties = {
                 id: { type: Type.STRING, description: "ID của nhân vật cần cập nhật." },
                 updates: {
                     type: Type.OBJECT,
-                    // By allowing additional properties, we can send updates for any field
-                    // in the character object, including new stats like `stress`.
-                    additionalProperties: true,
-                    description: "Một đối tượng chứa các trường cần cập nhật cho nhân vật, ví dụ: { 'stats': { 'stress': 10 } }."
+                    description: "Một đối tượng chứa các trường cần cập nhật cho nhân vật, ví dụ: { 'stats': { 'stress': 10 } }.",
+                    properties: {
+                        stats: CHARACTER_STATS_SCHEMA,
+                        mood: MOOD_SCHEMA,
+                        inventory: { type: Type.ARRAY, items: ITEM_SCHEMA },
+                        money: { type: Type.INTEGER },
+                        job: JOB_SCHEMA,
+                        assets: { type: Type.ARRAY, items: ASSET_SCHEMA },
+                        relationship: { type: Type.INTEGER, description: "Thiện cảm với người chơi." },
+                        respect: { type: Type.INTEGER },
+                        trust: { type: Type.INTEGER },
+                        fear: { type: Type.INTEGER },
+                        health: {
+                            type: Type.OBJECT,
+                            properties: {
+                                current: { type: Type.INTEGER },
+                                max: { type: Type.INTEGER }
+                            },
+                        },
+                        title: { type: Type.STRING },
+                        description: { type: Type.STRING },
+                    },
                 }
             },
             required: ['id', 'updates']
