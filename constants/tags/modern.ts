@@ -18,14 +18,14 @@ export const modernTags = {
     'Tags': ['Thám tử', 'Doanh nhân', 'Sát thủ', 'Cảnh sát', 'Idol', 'Quản lý Idol', 'Lập trình viên', 'Bác sĩ'],
     'Keywords': {
       'Kỹ năng': ['điều tra', 'đàm phán', 'lái xe', 'sử dụng máy tính', 'hát', 'nhảy', 'lập trình', 'ngoại ngữ', 'thiết kế'],
-      'Quốc tịch': ['Người Nhật', 'Người Hàn', 'Người Trung', 'Người Mỹ'],
+      'Quốc tịch': ['Người Việt', 'Người Nhật', 'Người Hàn', 'Người Trung', 'Người Mỹ'],
       'Cấp bậc Công việc': ['Thực tập sinh', 'Nhân viên', 'Trưởng phòng', 'Giám đốc', 'CEO'],
     }
   },
   Location: {
     'Tags': ['Tòa nhà văn phòng', 'Quán bar', 'Nhà riêng', 'Sân bay', 'Công ty giải trí', 'Chung cư cao cấp', 'Biệt thự', 'Nhà hàng 5 sao'],
     'Keywords': {
-        'Thành phố': ['Tokyo', 'Seoul', 'Thượng Hải', 'New York'],
+        'Thành phố': ['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Tokyo', 'Seoul', 'Thượng Hải', 'New York'],
     }
   },
   Faction: {

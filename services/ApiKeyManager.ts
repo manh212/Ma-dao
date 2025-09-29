@@ -84,8 +84,16 @@ const ApiKeyManager = {
     params: GenerateContentParameters,
     addToast: (message: string, type?: 'info' | 'success' | 'error' | 'warning') => void,
     incrementRequestCount: () => void,
-    options?: { safetySettings?: any[] }
+    options?: {
+        safetySettings?: any[];
+        logPrompt?: (content: string, purpose: string) => void;
+        purpose?: string;
+    }
   ): Promise<GenerateContentResponse> {
+    if (options?.logPrompt && typeof params.contents === 'string' && options.purpose) {
+        options.logPrompt(params.contents, options.purpose);
+    }
+    
     const validation = validateRequestParameters(params);
     if (!validation.isValid) {
         const errorMessage = validation.error || "Lỗi xác thực yêu cầu API.";

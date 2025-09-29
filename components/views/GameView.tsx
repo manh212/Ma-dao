@@ -32,9 +32,10 @@ interface GameViewProps {
     onSaveGame: (gameState: GameState, worldSettings: WorldSettings) => void;
     incrementApiRequestCount: () => void;
     apiRequestCount: number;
+    addDebugPrompt: (content: string, purpose: string) => void;
 }
 
-export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCount, apiRequestCount }: GameViewProps) => {
+export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCount, apiRequestCount, addDebugPrompt }: GameViewProps) => {
     const { addToast } = useToasts();
     const { gameState, worldSettings, dispatch } = useGameContext();
     
@@ -82,6 +83,7 @@ export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCoun
     } = useGameEngine({
         incrementApiRequestCount,
         onTurnComplete: handleTurnCompletion,
+        addDebugPrompt,
     });
     
     const scrollToBottom = useCallback((behavior: 'smooth' | 'auto' = 'smooth') => {
@@ -315,7 +317,7 @@ export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCoun
             {activeModal === 'lore' && <LoreModal initialRules={worldSettings.loreRules || []} onSave={handleSaveLore} onClose={() => setActiveModal(null)} />}
             {activeModal === 'memory' && <MemoryModal memories={gameState.memories || []} onPin={handlePinMemory} onDelete={handleDeleteMemory} onClose={() => setActiveModal(null)} onEntityClick={handleEntityClick} onEntityMouseEnter={handleEntityMouseEnter} onEntityMouseLeave={handleEntityMouseLeave} />}
             {activeModal === 'history' && <HistoryModal turns={gameState.turns} onRevert={handleRevert} onClose={() => setActiveModal(null)} onEntityClick={handleEntityClick} onEntityMouseEnter={handleEntityMouseEnter} onEntityMouseLeave={handleEntityMouseLeave} />}
-            {activeModal === 'gallery' && <GalleryModal onClose={() => setActiveModal(null)} addToast={addToast} incrementApiRequestCount={incrementApiRequestCount} />}
+            {activeModal === 'gallery' && <GalleryModal onClose={() => setActiveModal(null)} addToast={addToast} incrementApiRequestCount={incrementApiRequestCount} addDebugPrompt={addDebugPrompt} />}
             {characterToEditAvatar && <AvatarEditModal 
                 character={characterToEditAvatar} 
                 onClose={() => setCharacterToEditAvatar(null)} 

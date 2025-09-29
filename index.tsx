@@ -17,6 +17,9 @@ import { ChangelogModal } from './components/modals/ChangelogModal';
 import { SettingsProvider } from './components/contexts/SettingsContext';
 import { ToastProvider, useToasts } from './components/contexts/ToastContext';
 import { GameProvider, useGameContext } from './components/contexts/GameContext';
+import { DebugProvider, useDebugContext } from './components/contexts/DebugContext';
+import { DebugDisplay } from './components/debug/DebugDisplay';
+import { DebugModal } from './components/debug/DebugModal';
 import { useHashNavigation } from './hooks/useHashNavigation';
 import { ApiKeyManager } from './services/ApiKeyManager';
 import * as db from './services/db';
@@ -33,6 +36,7 @@ const AppContent = () => {
     const currentView = useHashNavigation();
     const { addToast } = useToasts();
     const { gameState, dispatch } = useGameContext();
+    const { addDebugPrompt } = useDebugContext();
     
     const [showApiKeyModal, setShowApiKeyModal] = useState(false);
     const [isApiKeyModalForced, setIsApiKeyModalForced] = useState(false);
@@ -45,6 +49,7 @@ const AppContent = () => {
     const [apiRequestCount, setApiRequestCount] = useState(0);
     const [isLoadingGame, setIsLoadingGame] = useState(false);
     const [saveDataToLoad, setSaveDataToLoad] = useState<SaveFile | null>(null);
+    const [showDebugModal, setShowDebugModal] = useState(false);
 
     const [menuBackgroundUrl, setMenuBackgroundUrl] = useState('');
     const [gameBackgroundUrl, setGameBackgroundUrl] = useState('');
@@ -348,7 +353,7 @@ const AppContent = () => {
 
         switch (currentView) {
             case 'create':
-                return <WorldCreator onBack={handleBackFromCreator} onCreateWorld={handleCreateWorld} incrementApiRequestCount={incrementApiRequestCount} />;
+                return <WorldCreator onBack={handleBackFromCreator} onCreateWorld={handleCreateWorld} incrementApiRequestCount={incrementApiRequestCount} addDebugPrompt={addDebugPrompt} />;
             case 'game':
                 return <GameView
                     onNavigateToMenu={() => {
@@ -358,6 +363,7 @@ const AppContent = () => {
                     onSaveGame={handleSaveGame}
                     incrementApiRequestCount={incrementApiRequestCount}
                     apiRequestCount={apiRequestCount}
+                    addDebugPrompt={addDebugPrompt}
                 />;
             case 'menu':
             default:
@@ -421,6 +427,7 @@ const AppContent = () => {
                     onSave={handleSaveApiKeys} 
                     incrementApiRequestCount={incrementApiRequestCount}
                     onDeleteAll={handleDeleteAllApiKeys}
+                    addDebugPrompt={addDebugPrompt}
                 />}
                 {showLoadGameModal && <LoadGameModal 
                     saves={saves} 
@@ -432,6 +439,8 @@ const AppContent = () => {
                 />}
                 {showSettingsModal && <SettingsModal onClose={() => setShowSettingsModal(false)} />}
                 {showChangelogModal && <ChangelogModal onClose={() => setShowChangelogModal(false)} />}
+                <DebugDisplay onOpen={() => setShowDebugModal(true)} />
+                {showDebugModal && <DebugModal isOpen={showDebugModal} onClose={() => setShowDebugModal(false)} />}
             </div>
         </>
     );
@@ -444,7 +453,9 @@ const App = () => (
     <ToastProvider>
         <SettingsProvider>
             <GameProvider>
-                <AppContent />
+                <DebugProvider>
+                    <AppContent />
+                </DebugProvider>
             </GameProvider>
         </SettingsProvider>
     </ToastProvider>

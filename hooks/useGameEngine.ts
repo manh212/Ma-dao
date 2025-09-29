@@ -20,11 +20,12 @@ import type { GameState, GameAction, Monster, Character, WorldSettings, Recipe }
 interface UseGameEngineProps {
     incrementApiRequestCount: () => void;
     onTurnComplete: (newGameState: GameState, newWorldSettings: WorldSettings, turnResult: any) => void;
+    addDebugPrompt: (content: string, purpose: string) => void;
 }
 
 type PredictedResult = { finalGameState: GameState; predictedActionId: string | null; };
 
-export const useGameEngine = ({ incrementApiRequestCount, onTurnComplete }: UseGameEngineProps) => {
+export const useGameEngine = ({ incrementApiRequestCount, onTurnComplete, addDebugPrompt }: UseGameEngineProps) => {
     const { settings } = useSettings();
     const { gameState, worldSettings, dispatch } = useGameContext();
     const { addToast } = useToasts();
@@ -136,7 +137,7 @@ export const useGameEngine = ({ incrementApiRequestCount, onTurnComplete }: UseG
             startLoadingMessageCycle('processing');
             const response = await ApiKeyManager.generateContentWithRetry({
                 model: GEMINI_FLASH, contents: turnProcessingPrompt, config: { responseMimeType: "application/json", responseSchema: getTurnSchemaForGenre(worldSettings.genre) }
-            }, addToast, incrementApiRequestCount);
+            }, addToast, incrementApiRequestCount, { logPrompt: addDebugPrompt, purpose: 'Xử lý lượt chơi' });
             
             const totalTokensForTurn = response.usageMetadata?.totalTokenCount || 0;
             const turnResult = JSON.parse(response.text?.trim() || '{}');
@@ -165,7 +166,7 @@ export const useGameEngine = ({ incrementApiRequestCount, onTurnComplete }: UseG
                 setLoadingMessage('');
             }
         }
-    }, [isAITurnProcessing, settings, gameState, worldSettings, onTurnComplete, addToast, incrementApiRequestCount, startLoadingMessageCycle, stopLoadingMessageCycle]);
+    }, [isAITurnProcessing, settings, gameState, worldSettings, onTurnComplete, addToast, incrementApiRequestCount, startLoadingMessageCycle, stopLoadingMessageCycle, addDebugPrompt]);
     
     // Effect to handle AI narration AFTER combat ends
     useEffect(() => {

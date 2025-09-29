@@ -15,6 +15,7 @@ interface ApiKeyModalProps {
     onSave: (configsJson: string) => void;
     incrementApiRequestCount: () => void;
     onDeleteAll: () => void;
+    addDebugPrompt: (content: string, purpose: string) => void;
 }
 
 type KeyStatus = 'unchecked' | 'checking' | 'valid' | 'invalid' | 'quota_exceeded';
@@ -29,7 +30,7 @@ interface KeyStatusInfo {
     message?: string;
 }
 
-export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiRequestCount, onDeleteAll }: ApiKeyModalProps) => {
+export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiRequestCount, onDeleteAll, addDebugPrompt }: ApiKeyModalProps) => {
     const [configs, setConfigs] = useState<ApiConfig[]>([]);
     const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
     const [keyStatuses, setKeyStatuses] = useState<Map<string, KeyStatusInfo>>(new Map());
@@ -156,11 +157,12 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
         });
         setKeyStatuses(statusesToUpdate);
 
-        const checkPromises = configs.map(async (config) => {
+        const checkPromises = configs.map(async (config, index) => {
             if (!config.key.trim()) {
                 return { id: config.id, statusInfo: { status: 'unchecked' as KeyStatus } };
             }
             incrementApiRequestCount(); // Count each check as a request
+            addDebugPrompt(API_KEY_VALIDATION_PROMPT, `Kiểm tra API Key #${index + 1}`);
             try {
                 const ai = new GoogleGenAI({ apiKey: config.key });
                 const response = await ai.models.generateContent({

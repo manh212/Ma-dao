@@ -21,6 +21,7 @@ interface GalleryModalProps {
     onClose: () => void;
     addToast: (message: string, type?: 'info' | 'success' | 'error' | 'warning') => void;
     incrementApiRequestCount: () => void;
+    addDebugPrompt: (content: string, purpose: string) => void;
 }
 
 const MAX_FILE_SIZE_MB = 2;
@@ -190,7 +191,7 @@ const ManualEntryModal = ({ image, onClose, onSave, allCategories }: ManualEntry
     );
 };
 
-export const GalleryModal = ({ onClose, addToast, incrementApiRequestCount }: GalleryModalProps) => {
+export const GalleryModal = ({ onClose, addToast, incrementApiRequestCount, addDebugPrompt }: GalleryModalProps) => {
     const { gameState, dispatch } = useGameContext();
     const modalRef = useRef<HTMLDivElement>(null);
     const [images, setImages] = useState<GalleryImage[]>([]);
@@ -432,7 +433,8 @@ ${JSON.stringify(imageMetadata.slice(0, 200))}
                         config: { responseMimeType: 'application/json', responseSchema: AVATAR_SELECTION_SCHEMA }
                     },
                     addToast,
-                    incrementApiRequestCount
+                    incrementApiRequestCount,
+                    { logPrompt: addDebugPrompt, purpose: `Tìm avatar cho ${npc.displayName}` }
                 );
                 const result = JSON.parse(response.text?.trim() || '{}');
 
@@ -576,7 +578,7 @@ ${JSON.stringify(imageMetadata.slice(0, 200))}
             )}
             
             {imageToDelete && ( <ConfirmationModal isOpen={!!imageToDelete} onClose={() => setImageToDelete(null)} onConfirm={confirmDelete} title="Xác Nhận Xóa" message={<span>Bạn có chắc chắn muốn xóa vĩnh viễn ảnh <strong>{imageToDelete.name}</strong> không?</span>} confirmText="Xóa" /> )}
-            {showImportConfirm && ( <ConfirmationModal isOpen={showImportConfirm} onClose={() => setShowImportConfirm(false)} onConfirm={confirmImport} title="Xác Nhận Nhập" message={<span>Thao tác này sẽ hợp nhất <strong>{imagesToImport?.length || 0}</strong> ảnh vào thư viện của bạn. Các ảnh có cùng ID sẽ bị ghi đè. Bạn có muốn tiếp tục?</span>} confirmText="Nhập & Hợp nhất" /> )}
+            {showImportConfirm && ( <ConfirmationModal isOpen={showImportConfirm} onClose={() => setShowImportConfirm(false)} onConfirm={confirmImport} title="Xác Nhận Nhập" message={<span>Thao tác này sẽ hợp nhất <strong>{imagesToImport?.length || 0}</strong> ảnh vào thư viện của bạn. Các ảnh có cùng ID sẽ bị ghi đè. Bạn có muốn tiếp tục không?</span>} confirmText="Nhập & Hợp nhất" /> )}
         </>
     );
 };

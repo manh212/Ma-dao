@@ -47,6 +47,7 @@ interface WorldCreatorProps {
     onBack: () => void;
     onCreateWorld: (gameState: GameState, worldSettings: WorldSettings) => void;
     incrementApiRequestCount: () => void;
+    addDebugPrompt: (content: string, purpose: string) => void;
 }
 
 const FanficRoleSelection = ({ analysisResult, onSelectRole }: { analysisResult: FanficAnalysisResult, onSelectRole: (role: string) => void }) => {
@@ -68,7 +69,7 @@ const FanficRoleSelection = ({ analysisResult, onSelectRole }: { analysisResult:
 };
 
 
-export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount }: WorldCreatorProps) => {
+export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount, addDebugPrompt }: WorldCreatorProps) => {
     const { addToast } = useToasts();
     const { formData, setFormData, fanficFileInfo, setFanficFileInfo, handleInputChange, handleStoryTemplateChange, handleVoLamArtsChange } = useWorldCreatorForm();
     const [isWorldSectionOpen, setIsWorldSectionOpen] = useState(true);
@@ -91,7 +92,7 @@ export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount }
     // FIX: Destructure `setFanficAnalysisResult` to allow resetting the analysis state.
     const {
         isCreating, creationMessage, error, setError, creationProgress, creationTimeElapsed, estimatedTime, creationSuccess, handleSuggestContext, isGeneratingContext, handleSuggestCharacter, isGeneratingChar, handleSuggestLoreRules, isGeneratingLoreRules, handleInitiateCreation, isAnalyzingFanfic, fanficAnalysisResult, setFanficAnalysisResult, handleAnalyzeFanfic
-    } = useWorldCreation({ formData, setFormData, onCreateWorld, addToast, incrementApiRequestCount });
+    } = useWorldCreation({ formData, setFormData, onCreateWorld, addToast, incrementApiRequestCount, addDebugPrompt });
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -141,7 +142,7 @@ export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount }
     5.  Trả về kết quả dưới dạng một đối tượng JSON duy nhất, tuân thủ nghiêm ngặt schema đã cho.`;
     
         try {
-            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt, config: { responseMimeType: "application/json", responseSchema: SUGGESTIONS_SCHEMA } }, addToast, incrementApiRequestCount);
+            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt, config: { responseMimeType: "application/json", responseSchema: SUGGESTIONS_SCHEMA } }, addToast, incrementApiRequestCount, { logPrompt: addDebugPrompt, purpose: `Gợi ý ${type === 'idea' ? 'Tình huống' : 'Tiểu sử'}` });
             const result = JSON.parse(response.text?.trim() || '{}');
             if (isMounted.current && result.suggestions) {
                 if (type === 'idea') setIdeaSuggestions(result.suggestions);
@@ -152,7 +153,7 @@ export const WorldCreator = ({ onBack, onCreateWorld, incrementApiRequestCount }
         } finally {
             if (isMounted.current) setIsSuggesting(null);
         }
-    }, [formData.genre, formData.setting, formData.personalityOuter, addToast, incrementApiRequestCount, handleGenericAiError]);
+    }, [formData.genre, formData.setting, formData.personalityOuter, addToast, incrementApiRequestCount, handleGenericAiError, addDebugPrompt]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

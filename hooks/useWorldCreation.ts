@@ -59,6 +59,7 @@ interface UseWorldCreationProps {
     onCreateWorld: (gameState: GameState, worldSettings: WorldSettings) => void;
     addToast: (message: string, type?: 'info' | 'success' | 'error' | 'warning') => void;
     incrementApiRequestCount: () => void;
+    addDebugPrompt: (content: string, purpose: string) => void;
 }
 
 export const useWorldCreation = ({
@@ -67,6 +68,7 @@ export const useWorldCreation = ({
     onCreateWorld,
     addToast,
     incrementApiRequestCount,
+    addDebugPrompt,
 }: UseWorldCreationProps) => {
     const [isGeneratingContext, setIsGeneratingContext] = useState(false);
     const [isGeneratingChar, setIsGeneratingChar] = useState(false);
@@ -139,7 +141,7 @@ export const useWorldCreation = ({
     **ĐỊNH DẠNG ĐẦU RA:** Trả về một đối tượng JSON hợp lệ theo schema được cung cấp.`;
     
         try {
-            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt, config: { responseMimeType: 'application/json', responseSchema: FANFIC_ANALYSIS_SCHEMA } }, addToast, incrementApiRequestCount);
+            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt, config: { responseMimeType: 'application/json', responseSchema: FANFIC_ANALYSIS_SCHEMA } }, addToast, incrementApiRequestCount, { logPrompt: addDebugPrompt, purpose: 'Phân tích Đồng nhân' });
             const result: FanficAnalysisResult = JSON.parse(response.text?.trim() || '{}');
             if (isMounted.current) {
                 setFanficAnalysisResult(result);
@@ -162,7 +164,7 @@ export const useWorldCreation = ({
         } finally {
             if (isMounted.current) setIsAnalyzingFanfic(false);
         }
-    }, [isAnalyzingFanfic, addToast, incrementApiRequestCount, handleGenericAiError, setFormData, setFanficAnalysisResult]);
+    }, [isAnalyzingFanfic, addToast, incrementApiRequestCount, handleGenericAiError, setFormData, setFanficAnalysisResult, addDebugPrompt]);
 
     const handleSuggestContext = useCallback(async () => {
         if (isGeneratingContext) return;
@@ -184,7 +186,7 @@ export const useWorldCreation = ({
     4.  KHÔNG trả về JSON, chỉ trả về một chuỗi văn bản thuần túy (plain text).`;
     
         try {
-            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt }, addToast, incrementApiRequestCount);
+            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt }, addToast, incrementApiRequestCount, { logPrompt: addDebugPrompt, purpose: 'Gợi ý Tổng quan Thế giới' });
             if (isMounted.current) {
                 setFormData(prev => ({ ...prev, details: response.text?.trim() || '' }));
                 addToast("Đã tạo tổng quan thế giới bằng AI!", 'success');
@@ -194,7 +196,7 @@ export const useWorldCreation = ({
         } finally {
             if (isMounted.current) setIsGeneratingContext(false);
         }
-    }, [isGeneratingContext, formData.genre, formData.setting, formData.idea, setFormData, addToast, incrementApiRequestCount, handleGenericAiError]);
+    }, [isGeneratingContext, formData.genre, formData.setting, formData.idea, setFormData, addToast, incrementApiRequestCount, handleGenericAiError, addDebugPrompt]);
 
     const handleSuggestCharacter = useCallback(async () => {
         // This function is not currently used by any UI element.
@@ -221,7 +223,7 @@ export const useWorldCreation = ({
     4.  Trả về một đối tượng JSON với một mảng chuỗi string trong trường "rules".`;
         
         try {
-            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt, config: { responseMimeType: "application/json", responseSchema: LORE_RULES_SCHEMA } }, addToast, incrementApiRequestCount);
+            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: prompt, config: { responseMimeType: "application/json", responseSchema: LORE_RULES_SCHEMA } }, addToast, incrementApiRequestCount, { logPrompt: addDebugPrompt, purpose: 'Gợi ý Luật lệ' });
             const result = JSON.parse(response.text?.trim() || '{}');
             if (isMounted.current && result.rules && Array.isArray(result.rules)) {
                 const newRules = result.rules.map((text: string) => ({
@@ -237,7 +239,7 @@ export const useWorldCreation = ({
         } finally {
             if (isMounted.current) setIsGeneratingLoreRules(false);
         }
-    }, [isGeneratingLoreRules, formData.genre, formData.setting, formData.idea, formData.details, setFormData, addToast, incrementApiRequestCount, handleGenericAiError]);
+    }, [isGeneratingLoreRules, formData.genre, formData.setting, formData.idea, formData.details, setFormData, addToast, incrementApiRequestCount, handleGenericAiError, addDebugPrompt]);
 
     const handleCreateWorld = useCallback(async (creationData: WorldSettings, selectedRole?: string | null) => {
         try {
@@ -247,7 +249,7 @@ export const useWorldCreation = ({
             // Stage 1: Planning
             setCreationMessage("AI đang lên kế hoạch... (1/4)");
             const planningPrompt = buildPlanningPrompt(creationData, DUMMY_APP_SETTINGS_FOR_CREATION);
-            const planResponse = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: planningPrompt, config: { responseMimeType: "application/json", responseSchema: TURN_PLAN_SCHEMA } }, addToast, incrementApiRequestCount);
+            const planResponse = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: planningPrompt, config: { responseMimeType: "application/json", responseSchema: TURN_PLAN_SCHEMA } }, addToast, incrementApiRequestCount, { logPrompt: addDebugPrompt, purpose: 'Tạo Thế giới - Lên kế hoạch' });
             totalTokenCount += planResponse.usageMetadata?.totalTokenCount || 0;
             if (!isMounted.current) return;
             const creationPlan = JSON.parse(planResponse.text?.trim() || '{}');
@@ -256,7 +258,7 @@ export const useWorldCreation = ({
             // Stage 2: Character Creation
             setCreationMessage("AI đang tạo nhân vật... (2/4)");
             const charPrompt = buildCharacterPrompt(creationData, creationPlan, DUMMY_APP_SETTINGS_FOR_CREATION);
-            const charResponse = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: charPrompt, config: { responseMimeType: "application/json", responseSchema: INITIAL_CHARACTERS_SCHEMA } }, addToast, incrementApiRequestCount);
+            const charResponse = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: charPrompt, config: { responseMimeType: "application/json", responseSchema: INITIAL_CHARACTERS_SCHEMA } }, addToast, incrementApiRequestCount, { logPrompt: addDebugPrompt, purpose: 'Tạo Thế giới - Tạo Nhân vật' });
             totalTokenCount += charResponse.usageMetadata?.totalTokenCount || 0;
             if (!isMounted.current) return;
             const characters = JSON.parse(charResponse.text?.trim() || '{}');
@@ -268,8 +270,8 @@ export const useWorldCreation = ({
             const enrichmentPrompt = buildWorldEnrichmentPrompt(creationData, creationPlan, characters, {}, DUMMY_APP_SETTINGS_FOR_CREATION); // Pass empty sceneData for now
             
             const [writeResponse, enrichmentResponse] = await Promise.all([
-                ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: writingPrompt, config: { responseMimeType: "application/json", responseSchema: SCENE_WRITING_SCHEMA } }, addToast, incrementApiRequestCount),
-                ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: enrichmentPrompt, config: { responseMimeType: "application/json", responseSchema: WORLD_ENRICHMENT_SCHEMA } }, addToast, incrementApiRequestCount)
+                ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: writingPrompt, config: { responseMimeType: "application/json", responseSchema: SCENE_WRITING_SCHEMA } }, addToast, incrementApiRequestCount, { logPrompt: addDebugPrompt, purpose: 'Tạo Thế giới - Viết Cảnh' }),
+                ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: enrichmentPrompt, config: { responseMimeType: "application/json", responseSchema: WORLD_ENRICHMENT_SCHEMA } }, addToast, incrementApiRequestCount, { logPrompt: addDebugPrompt, purpose: 'Tạo Thế giới - Làm giàu Thế giới' })
             ]);
             
             totalTokenCount += (writeResponse.usageMetadata?.totalTokenCount || 0) + (enrichmentResponse.usageMetadata?.totalTokenCount || 0);
@@ -307,7 +309,7 @@ export const useWorldCreation = ({
         } catch (err) {
             throw err;
         }
-    }, [onCreateWorld, addToast, incrementApiRequestCount, fanficAnalysisResult]);
+    }, [onCreateWorld, addToast, incrementApiRequestCount, fanficAnalysisResult, addDebugPrompt]);
 
     const handleInitiateCreation = useCallback(async (selectedRole?: string | null) => {
         if (isCreating) return;

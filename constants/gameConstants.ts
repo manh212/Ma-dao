@@ -35,27 +35,28 @@ export const SETTINGS = [
     'Trung Quốc',
     'Nhật Bản',
     'Hàn Quốc',
+    'Việt Nam',
     'Tự Do (Do người chơi hoặc AI quyết định)',
 ];
 
 export const GENRE_SETTING_MAP: Record<string, string[]> = {
     'Marvel': ['New York City', 'Toàn Cầu (Global)', 'Vũ Trụ (Cosmic)', 'Đường Phố (Street-Level)', 'Tự Do (Do người chơi hoặc AI quyết định)'],
-    'Quản lý Nhóm nhạc': ['Trung Quốc', 'Nhật Bản', 'Hàn Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
+    'Quản lý Nhóm nhạc': ['Việt Nam', 'Trung Quốc', 'Nhật Bản', 'Hàn Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
     'Đồng nhân': ['Dựa trên Tệp Tải lên'],
     'Dị Giới Fantasy': ['Dị Giới (Đa dạng văn hóa)', 'Fantasy phương Tây', 'Nhật Bản', 'Tự Do (Do người chơi hoặc AI quyết định)'],
     'Thế Giới Giả Tưởng (Game/Tiểu Thuyết)': ['Dị Giới (Đa dạng văn hóa)', 'Fantasy phương Tây', 'Nhật Bản', 'Tự Do (Do người chơi hoặc AI quyết định)'],
-    'Tu Tiên': ['Trung Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
-    'Võ Lâm': ['Trung Quốc', 'Hàn Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
+    'Tu Tiên': ['Việt Nam', 'Trung Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
+    'Võ Lâm': ['Việt Nam', 'Trung Quốc', 'Hàn Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
     'Thời Chiến (Trung Hoa/Nhật Bản)': ['Trung Quốc', 'Nhật Bản', 'Tự Do (Do người chơi hoặc AI quyết định)'],
-    'Đô Thị Hiện Đại': ['Trung Quốc', 'Nhật Bản', 'Hàn Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
-    'Đô Thị Hiện Đại 100% bình thường': ['Trung Quốc', 'Nhật Bản', 'Hàn Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
-    'Hậu Tận Thế': ['Dị Giới (Đa dạng văn hóa)', 'Fantasy phương Tây', 'Trung Quốc', 'Nhật Bản', 'Hàn Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
-    'Huyền Huyễn Truyền Thuyết': ['Trung Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
+    'Đô Thị Hiện Đại': ['Việt Nam', 'Trung Quốc', 'Nhật Bản', 'Hàn Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
+    'Đô Thị Hiện Đại 100% bình thường': ['Việt Nam', 'Trung Quốc', 'Nhật Bản', 'Hàn Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
+    'Hậu Tận Thế': ['Việt Nam', 'Dị Giới (Đa dạng văn hóa)', 'Fantasy phương Tây', 'Trung Quốc', 'Nhật Bản', 'Hàn Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
+    'Huyền Huyễn Truyền Thuyết': ['Việt Nam', 'Trung Quốc', 'Tự Do (Do người chơi hoặc AI quyết định)'],
 };
 
 export const INITIAL_WC_FORM_DATA: WorldSettings = {
-    genre: 'Dị Giới Fantasy',
-    setting: 'Dị Giới (Đa dạng văn hóa)',
+    genre: 'Đô Thị Hiện Đại',
+    setting: 'Việt Nam',
     idea: '',
     startingScene: 'safe_alone',
     details: '',
