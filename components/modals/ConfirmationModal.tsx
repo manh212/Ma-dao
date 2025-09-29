@@ -2,7 +2,8 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 import './ConfirmationModal.css';
 
 interface ConfirmationModalProps {
@@ -24,6 +25,8 @@ export const ConfirmationModal = ({
     confirmText = 'Xác nhận',
     cancelText = 'Hủy'
 }: ConfirmationModalProps) => {
+    const modalRef = useRef<HTMLDivElement>(null);
+    useModalAccessibility(isOpen, modalRef);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -53,6 +56,7 @@ export const ConfirmationModal = ({
     return (
         <div className="modal-overlay confirmation-overlay" onClick={onClose}>
             <div 
+                ref={modalRef}
                 className="modal-content confirmation-modal-content" 
                 onClick={e => e.stopPropagation()}
                 role="dialog"

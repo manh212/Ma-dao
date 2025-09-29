@@ -2,9 +2,10 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { InlineStoryRenderer } from '../game/StoryRenderer';
 import { useGameContext } from '../contexts/GameContext';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 import { ConfirmationModal } from './ConfirmationModal';
 import type { Memory } from '../../types';
 import './MemoryModal.css';
@@ -21,7 +22,9 @@ interface MemoryModalProps {
 
 export const MemoryModal = ({ memories, onPin, onDelete, onClose, onEntityClick, onEntityMouseEnter, onEntityMouseLeave }: MemoryModalProps) => {
     const { gameState } = useGameContext();
+    const modalRef = useRef<HTMLDivElement>(null);
     const [memoryToDelete, setMemoryToDelete] = useState<string | null>(null);
+    useModalAccessibility(true, modalRef);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -56,6 +59,7 @@ export const MemoryModal = ({ memories, onPin, onDelete, onClose, onEntityClick,
         <>
             <div className="modal-overlay" onClick={onClose}>
                 <div 
+                    ref={modalRef}
                     className="modal-content memory-modal-content" 
                     onClick={e => e.stopPropagation()}
                     role="dialog"

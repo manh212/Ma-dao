@@ -2,9 +2,10 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { InlineStoryRenderer } from '../game/StoryRenderer';
 import { useGameContext } from '../contexts/GameContext';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 import type { Turn } from '../../types';
 import './HistoryModal.css';
 
@@ -19,8 +20,10 @@ interface HistoryModalProps {
 
 export const HistoryModal = ({ turns, onRevert, onClose, onEntityClick, onEntityMouseEnter, onEntityMouseLeave }: HistoryModalProps) => {
     const { gameState } = useGameContext();
+    const modalRef = useRef<HTMLDivElement>(null);
     const recentTurns = turns.slice(Math.max(0, turns.length - 20)).reverse();
     const latestTurnIndex = turns.length - 1;
+    useModalAccessibility(true, modalRef);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -37,6 +40,7 @@ export const HistoryModal = ({ turns, onRevert, onClose, onEntityClick, onEntity
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div 
+                ref={modalRef}
                 className="modal-content history-modal-content" 
                 onClick={e => e.stopPropagation()}
                 role="dialog"

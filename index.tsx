@@ -423,7 +423,9 @@ const AppContent = () => {
                         <div className="app-background-overlay"></div>
                     </>
                 )}
-                {renderView()}
+                <div id="main-content" style={{ display: 'contents' }}>
+                    {renderView()}
+                </div>
                 {showApiKeyModal && <ApiKeyModal 
                     initialConfigs={apiConfigs} 
                     onClose={() => {

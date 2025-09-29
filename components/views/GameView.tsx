@@ -350,7 +350,8 @@ export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCoun
             
             {showCombatTransition && <CombatTransitionOverlay />}
             
-            <EntityTooltip data={activeTooltip?.data || null} onClose={() => setActiveTooltip(null)} onEntityClick={handleEntityClick} onEntityMouseEnter={handleEntityMouseEnter} onEntityMouseLeave={handleEntityMouseLeave} />
+            {/* FIX: Add missing 'id' prop to EntityTooltip. */}
+            <EntityTooltip id="game-view-tooltip" data={activeTooltip?.data || null} onClose={() => setActiveTooltip(null)} onEntityClick={handleEntityClick} onEntityMouseEnter={handleEntityMouseEnter} onEntityMouseLeave={handleEntityMouseLeave} />
             
              <GameMenuSidebar
                 isOpen={isMenuOpen}

@@ -4,6 +4,7 @@
 */
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import * as db from '../../services/db';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 import type { GameCharacter, GalleryImage } from '../../types';
 import './AvatarEditModal.css';
 
@@ -17,10 +18,12 @@ interface AvatarEditModalProps {
 const MAX_FILE_SIZE_MB = 2;
 
 export const AvatarEditModal = ({ character, onClose, onSave, addToast }: AvatarEditModalProps) => {
+    const modalRef = useRef<HTMLDivElement>(null);
     const [activeTab, setActiveTab] = useState('upload');
     const [urlInput, setUrlInput] = useState('');
     const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
     const [isLoadingGallery, setIsLoadingGallery] = useState(true);
+    useModalAccessibility(true, modalRef);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -91,6 +94,7 @@ export const AvatarEditModal = ({ character, onClose, onSave, addToast }: Avatar
     return (
         <div className="modal-overlay confirmation-overlay" onClick={onClose}>
             <div 
+                ref={modalRef}
                 className="modal-content avatar-edit-modal" 
                 onClick={e => e.stopPropagation()}
                 role="dialog"

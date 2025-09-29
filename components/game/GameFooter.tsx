@@ -331,7 +331,9 @@ export const GameFooter = React.memo(({
 
     return (
         <footer className={`game-footer ${isEffectivelyCollapsed ? 'collapsed' : ''}`}>
+             {/* FIX: Add missing 'id' prop to ActionTooltip. */}
              <ActionTooltip
+                id="action-tooltip"
                 tooltipData={actionTooltip}
                 onEntityClick={onEntityClick}
                 onEntityMouseEnter={onEntityMouseEnter}

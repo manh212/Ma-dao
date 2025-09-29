@@ -77,7 +77,7 @@ export const GameHeader = React.memo(({
                     className="menu-toggle-button mobile-menu-button"
                     onClick={onToggleMenu}
                     disabled={isProcessing}
-                    aria-label="Mở menu"
+                    aria-label="Mở menu chính"
                 >
                     <MenuIcon />
                 </button>
@@ -132,7 +132,7 @@ export const GameHeader = React.memo(({
                     className="menu-toggle-button desktop-menu-button"
                     onClick={onToggleMenu}
                     disabled={isProcessing}
-                    aria-label="Mở menu"
+                    aria-label="Mở menu chính"
                 >
                     <MenuIcon />
                 </button>

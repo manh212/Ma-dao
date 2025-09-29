@@ -2,9 +2,10 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenAI } from "@google/genai";
 import { generateUniqueId } from '../../utils/id';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 import { GEMINI_FLASH, API_KEY_VALIDATION_PROMPT } from '../../constants/aiConstants';
 import './ApiKeyModal.css';
 
@@ -43,6 +44,8 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
     const [keyStatuses, setKeyStatuses] = useState<Map<string, KeyStatusInfo>>(new Map());
     const [isChecking, setIsChecking] = useState(false);
     const [visibleKeys, setVisibleKeys] = useState(new Set<string>());
+    const modalRef = useRef<HTMLDivElement>(null);
+    useModalAccessibility(true, modalRef);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -205,6 +208,7 @@ export const ApiKeyModal = ({ initialConfigs, onClose, onSave, incrementApiReque
     return (
         <div className="modal-overlay" onClick={handleCloseAndSave}>
             <div 
+                ref={modalRef}
                 className="modal-content api-key-modal" 
                 onClick={e => e.stopPropagation()}
                 role="dialog"

@@ -89,5 +89,5 @@ const UnmemoizedRelationshipCard = ({ npc, playerRelationship, onClick }: Relati
         </div>
     );
 };
-// FIX: Wrap component in React.memo to prevent TypeScript errors related to the `key` prop when used in a list.
+// FIX: Wrap component in React.memo to prevent potential TypeScript errors related to the 'key' prop when used in a list.
 export const RelationshipCard = React.memo(UnmemoizedRelationshipCard);

@@ -18,13 +18,14 @@ const SkullIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 
 
 interface EntityTooltipProps {
     data: EntityTooltipData | null;
+    id: string;
     onClose: () => void;
     onEntityClick: (event: React.MouseEvent, id: string, type: string) => void;
     onEntityMouseEnter: (event: React.MouseEvent, id: string, type: string) => void;
     onEntityMouseLeave: () => void;
 }
 
-export const EntityTooltip = ({ data, onClose, onEntityClick, onEntityMouseEnter, onEntityMouseLeave }: EntityTooltipProps) => {
+export const EntityTooltip = ({ data, id, onClose, onEntityClick, onEntityMouseEnter, onEntityMouseLeave }: EntityTooltipProps) => {
     const { gameState, worldSettings } = useGameContext();
     const tooltipRef = useRef<HTMLDivElement>(null);
     const [adjustedPosition, setAdjustedPosition] = useState<EntityTooltipData['position'] | null>(null);
@@ -69,7 +70,8 @@ export const EntityTooltip = ({ data, onClose, onEntityClick, onEntityMouseEnter
     }, [data]);
 
 
-    if (!data) return null;
+    if (!data) return <div ref={tooltipRef} id={id} className="entity-tooltip" style={{ visibility: 'hidden', position: 'fixed' }} role="tooltip"></div>;
+
     const { name, type, description, displayName, avatarUrl, age, ageDescription, gender, relationship, respect, trust, fear } = data;
     
     const label = ENTITY_TYPE_LABELS[type as keyof typeof ENTITY_TYPE_LABELS] || type;
@@ -89,6 +91,8 @@ export const EntityTooltip = ({ data, onClose, onEntityClick, onEntityMouseEnter
         return (
             <div 
                 ref={tooltipRef}
+                id={id}
+                role="tooltip"
                 className="entity-tooltip npc-tooltip" 
                 style={tooltipStyle}
                 onClick={e => e.stopPropagation()}
@@ -139,6 +143,8 @@ export const EntityTooltip = ({ data, onClose, onEntityClick, onEntityMouseEnter
      return (
         <div 
             ref={tooltipRef}
+            id={id}
+            role="tooltip"
             className="entity-tooltip item-tooltip" 
             style={tooltipStyle}
             onClick={e => e.stopPropagation()}

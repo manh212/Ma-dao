@@ -7,6 +7,7 @@ import { ApiKeyManager } from '../../services/ApiKeyManager';
 import { getApiErrorMessage } from '../../utils/error';
 import * as db from '../../services/db';
 import { generateUniqueId } from '../../utils/id';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 import { ConfirmationModal } from './ConfirmationModal';
 import { FormField } from '../ui/FormField';
 import { useGameContext } from '../contexts/GameContext';
@@ -82,6 +83,8 @@ interface ManualEntryModalProps {
 
 const ManualEntryModal = ({ image, onClose, onSave, allCategories }: ManualEntryModalProps) => {
     const [formData, setFormData] = useState<GalleryImage>(image);
+    const modalRef = useRef<HTMLDivElement>(null);
+    useModalAccessibility(true, modalRef);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -105,7 +108,7 @@ const ManualEntryModal = ({ image, onClose, onSave, allCategories }: ManualEntry
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content manual-entry-modal" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="manual-entry-title">
+            <div ref={modalRef} className="modal-content manual-entry-modal" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="manual-entry-title">
                 <header className="modal-header">
                     <h3 id="manual-entry-title">Chỉnh Sửa Chi Tiết Ảnh</h3>
                     <button onClick={onClose} className="modal-close-button" aria-label="Đóng">×</button>
@@ -189,6 +192,7 @@ const ManualEntryModal = ({ image, onClose, onSave, allCategories }: ManualEntry
 
 export const GalleryModal = ({ onClose, addToast, incrementApiRequestCount }: GalleryModalProps) => {
     const { gameState, dispatch } = useGameContext();
+    const modalRef = useRef<HTMLDivElement>(null);
     const [images, setImages] = useState<GalleryImage[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     
@@ -201,6 +205,7 @@ export const GalleryModal = ({ onClose, addToast, incrementApiRequestCount }: Ga
     const [imagesToImport, setImagesToImport] = useState<GalleryImage[] | null>(null);
     const [imageToEdit, setImageToEdit] = useState<GalleryImage | null>(null);
     const [isProcessingAvatars, setIsProcessingAvatars] = useState(false);
+    useModalAccessibility(true, modalRef);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const importLibraryInputRef = useRef<HTMLInputElement>(null);
@@ -257,7 +262,7 @@ export const GalleryModal = ({ onClose, addToast, incrementApiRequestCount }: Ga
         if (!files || files.length === 0) return;
         
         let processedCount = 0;
-// FIX: Add explicit type `File` to the mapped `file` variable to resolve property access errors.
+        // FIX: Add explicit type `File` to the mapped `file` variable to resolve property access errors.
         const uploadPromises = Array.from(files).map(async (file: File) => {
             if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
                 addToast(`Tệp "${file.name}" quá lớn (tối đa ${MAX_FILE_SIZE_MB}MB) và sẽ bị bỏ qua.`, 'warning');
@@ -455,13 +460,13 @@ ${JSON.stringify(imageMetadata.slice(0, 200))}
         setIsProcessingAvatars(false);
     };
 
-// FIX: Add explicit string types to the sort callback arguments to resolve `localeCompare` error on `unknown`.
+    // FIX: Add explicit string types to the sort callback arguments to resolve `localeCompare` error on `unknown`.
     const sortedCategories = Array.from(categories.keys()).sort((a: string, b: string) => a.localeCompare(b, 'vi'));
 
     return (
         <>
             <div className="modal-overlay" onClick={onClose}>
-                <div className="modal-content gallery-modal-content" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="gallery-modal-title">
+                <div ref={modalRef} className="modal-content gallery-modal-content" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="gallery-modal-title">
                     <header className="modal-header">
                         <button className="lore-button file-action upload-primary" onClick={() => fileInputRef.current?.click()}>
                             + Tải Lên Ảnh Mới
@@ -556,7 +561,7 @@ ${JSON.stringify(imageMetadata.slice(0, 200))}
                     image={imageToEdit}
                     onClose={() => setImageToEdit(null)}
                     onSave={handleManualUpdate}
-// FIX: Cast the result of `Array.from` to `string[]` to satisfy the prop type.
+                    // FIX: Cast the result of `Array.from` to `string[]` to satisfy the prop type.
                     allCategories={Array.from(categories.keys()) as string[]}
                 />
             )}

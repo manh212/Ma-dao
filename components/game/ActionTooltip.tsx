@@ -12,12 +12,13 @@ interface ActionTooltipProps {
         action: GameAction;
         position: { top: number; left: number; right: number; bottom: number };
     } | null;
+    id: string;
     onEntityClick: (event: React.MouseEvent, name: string, type: string) => void;
     onEntityMouseEnter: (event: React.MouseEvent, name: string, type: string) => void;
     onEntityMouseLeave: () => void;
 }
 
-export const ActionTooltip = ({ tooltipData, onEntityClick, onEntityMouseEnter, onEntityMouseLeave }: ActionTooltipProps) => {
+export const ActionTooltip = ({ tooltipData, id, onEntityClick, onEntityMouseEnter, onEntityMouseLeave }: ActionTooltipProps) => {
     const { gameState } = useGameContext();
     const tooltipRef = useRef<HTMLDivElement>(null);
     const [style, setStyle] = useState<React.CSSProperties>({
@@ -68,12 +69,12 @@ export const ActionTooltip = ({ tooltipData, onEntityClick, onEntityMouseEnter, 
         }
     }, [tooltipData]);
 
-    if (!tooltipData) return <div ref={tooltipRef} className="action-tooltip" style={style} role="tooltip"></div>;
+    if (!tooltipData) return <div ref={tooltipRef} id={id} className="action-tooltip" style={style} role="tooltip"></div>;
 
     const { action } = tooltipData;
 
     return (
-        <div ref={tooltipRef} className="action-tooltip" style={style} role="tooltip">
+        <div ref={tooltipRef} id={id} className="action-tooltip" style={style} role="tooltip">
             {action.benefit && (
                 <div className="action-tooltip-section benefit">
                     <h6 className="action-tooltip-title">Lợi Ích Tiềm Năng</h6>

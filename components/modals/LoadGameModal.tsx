@@ -4,6 +4,7 @@
 */
 import React, { useRef, useState, useEffect } from 'react';
 import { ConfirmationModal } from './ConfirmationModal';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 import { formatBytes } from '../../utils/game';
 import type { SaveFile } from '../../types';
 import './LoadGameModal.css';
@@ -19,8 +20,10 @@ interface LoadGameModalProps {
 
 export const LoadGameModal = ({ saves, onClose, onLoad, onDelete, onUpload, onDownload }: LoadGameModalProps) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [saveToDelete, setSaveToDelete] = useState<{ id: string; name: string } | null>(null);
+    useModalAccessibility(true, modalRef);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -93,6 +96,7 @@ export const LoadGameModal = ({ saves, onClose, onLoad, onDelete, onUpload, onDo
         <>
             <div className="modal-overlay" onClick={onClose}>
                 <div 
+                    ref={modalRef}
                     className="modal-content load-game-modal" 
                     onClick={e => e.stopPropagation()}
                     role="dialog"

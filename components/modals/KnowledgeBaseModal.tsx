@@ -5,6 +5,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { StoryRenderer } from '../game/StoryRenderer';
 import { useGameContext } from '../contexts/GameContext';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 import { getRelationshipInfo } from '../../utils/game';
 import { KNOWLEDGE_BASE_CATEGORIES, KB_CATEGORY_ORDER } from '../../constants/gameConstants';
 import type { GameCharacter, KnowledgeEntity } from '../../types';
@@ -23,6 +24,7 @@ interface KnowledgeBaseModalProps {
 
 export const KnowledgeBaseModal = ({ onClose, onEntityClick, onEntityMouseEnter, onEntityMouseLeave, onNpcSelect, onRenameEntity, onUpdateWorldSummary, addToast }: KnowledgeBaseModalProps) => {
     const { gameState, worldSettings } = useGameContext();
+    const modalRef = useRef<HTMLDivElement>(null);
     const [activeTab, setActiveTab] = useState<keyof typeof KNOWLEDGE_BASE_CATEGORIES>('npcs');
     const [searchTerm, setSearchTerm] = useState('');
     const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -31,6 +33,7 @@ export const KnowledgeBaseModal = ({ onClose, onEntityClick, onEntityMouseEnter,
     const [editableSummary, setEditableSummary] = useState(gameState.worldSummary || '');
     const editInputRef = useRef<HTMLInputElement>(null);
     const { knowledgeBase } = gameState;
+    useModalAccessibility(true, modalRef);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -104,7 +107,13 @@ export const KnowledgeBaseModal = ({ onClose, onEntityClick, onEntityMouseEnter,
                             <>
                                 <span>{item.displayName}</span>
                                 <div className="kb-item-actions">
-                                    <button className="edit-name-button" title="Đổi tên" onClick={(e) => handleEditClick(e, item)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleEditClick(e, item)}>✏️</button>
+                                    <button 
+                                        className="edit-name-button" 
+                                        aria-label={`Đổi tên hiển thị cho ${item.displayName}`}
+                                        title="Đổi tên hiển thị" 
+                                        onClick={(e) => handleEditClick(e, item)} 
+                                        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleEditClick(e, item)}
+                                    >✏️</button>
                                 </div>
                             </>
                         )}
@@ -230,6 +239,7 @@ export const KnowledgeBaseModal = ({ onClose, onEntityClick, onEntityMouseEnter,
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div 
+                ref={modalRef}
                 className="modal-content kb-modal-content" 
                 onClick={e => e.stopPropagation()}
                 role="dialog"

@@ -4,6 +4,7 @@
 */
 import React, { useState, useRef, useEffect } from 'react';
 import { generateUniqueId } from '../../utils/id';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 import type { LoreRule } from '../../types';
 import './LoreModal.css';
 
@@ -14,6 +15,7 @@ interface LoreModalProps {
 }
 
 export const LoreModal = ({ initialRules, onSave, onClose }: LoreModalProps) => {
+    const modalRef = useRef<HTMLDivElement>(null);
     const [rules, setRules] = useState<LoreRule[]>(() => {
         return (initialRules || []).map((rule) => ({
             ...rule,
@@ -21,6 +23,7 @@ export const LoreModal = ({ initialRules, onSave, onClose }: LoreModalProps) => 
         }));
     });
     const fileInputRef = useRef<HTMLInputElement>(null);
+    useModalAccessibility(true, modalRef);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -111,6 +114,7 @@ export const LoreModal = ({ initialRules, onSave, onClose }: LoreModalProps) => 
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div 
+                ref={modalRef}
                 className="modal-content lore-modal-content" 
                 onClick={e => e.stopPropagation()}
                 role="dialog"

@@ -8,6 +8,7 @@ import { ToggleSwitch } from '../ui/ToggleSwitch';
 import { useSettings } from '../contexts/SettingsContext';
 import { useGameContext } from '../contexts/GameContext';
 import { useToasts } from '../contexts/ToastContext';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 import * as db from '../../services/db';
 import { generateUniqueId } from '../../utils/id';
 import { BackgroundManager } from '../../services/BackgroundManager';
@@ -48,12 +49,15 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
     const { settings, updateSetting } = useSettings();
     const { gameState, worldSettings, dispatch: gameDispatch } = useGameContext();
     const { addToast } = useToasts();
+    const modalRef = useRef<HTMLDivElement>(null);
     const backgroundInputRef = useRef<HTMLInputElement>(null);
     const [bgTypeToSet, setBgTypeToSet] = useState<'menu' | 'game' | null>(null);
     const [activeTab, setActiveTab] = useState('appearance');
 
     const [menuBgUrl, setMenuBgUrl] = useState('');
     const [gameBgUrl, setGameBgUrl] = useState('');
+
+    useModalAccessibility(true, modalRef);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -274,6 +278,7 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
         <>
             <div className="modal-overlay" onClick={onClose}>
                 <div 
+                    ref={modalRef}
                     className="modal-content settings-modal-content" 
                     onClick={e => e.stopPropagation()}
                     role="dialog"
