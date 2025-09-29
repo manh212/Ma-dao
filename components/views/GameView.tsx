@@ -68,13 +68,9 @@ export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCoun
 
     const {
         submitAction,
-        analyzeAction,
         retryLastAction,
         isProcessing,
-        isAnalyzing,
         loadingMessage,
-        actionAnalysis,
-        setActionAnalysis,
         turnCreationProgress,
         turnCreationTimeElapsed,
         error,
@@ -116,10 +112,6 @@ export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCoun
             setCustomAction('');
         }
     }, [submitAction]);
-
-    const handleAnalyzeAction = useCallback(async () => {
-        await analyzeAction(customAction);
-    }, [analyzeAction, customAction]);
     
     const handleEntityClick = useCallback((event: React.MouseEvent, entityId: string, entityType: string) => {
         event.stopPropagation();
@@ -376,19 +368,15 @@ export const GameView = ({ onNavigateToMenu, onSaveGame, incrementApiRequestCoun
                     areActionsVisible={areActionsVisible}
                     onShowActions={() => setAreActionsVisible(true)}
                     isProcessing={isProcessing}
-                    isAnalyzing={isAnalyzing}
                     loadingMessage={loadingMessage}
                     error={error}
                     setError={setError}
                     customAction={customAction}
                     setCustomAction={setCustomAction}
-                    actionAnalysis={actionAnalysis}
-                    setActionAnalysis={setActionAnalysis}
                     onEntityClick={handleEntityClick}
                     onEntityMouseEnter={handleEntityMouseEnter}
                     onEntityMouseLeave={handleEntityMouseLeave}
                     onAction={handleAction}
-                    onAnalyzeAction={handleAnalyzeAction}
                     onScrollToBottom={scrollToBottom}
                     turnCreationProgress={turnCreationProgress}
                     turnCreationTimeElapsed={turnCreationTimeElapsed}

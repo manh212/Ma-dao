@@ -14,19 +14,15 @@ interface GameFooterProps {
     areActionsVisible: boolean;
     onShowActions: () => void;
     isProcessing: boolean;
-    isAnalyzing: boolean;
     loadingMessage: string;
     error: string | null;
     setError: (error: string | null) => void;
     customAction: string;
     setCustomAction: (action: string) => void;
-    actionAnalysis: any;
-    setActionAnalysis: (analysis: any) => void;
     onEntityClick: (event: React.MouseEvent, name: string, type: string) => void;
     onEntityMouseEnter: (event: React.MouseEvent, name: string, type: string) => void;
     onEntityMouseLeave: () => void;
     onAction: (action: Partial<GameAction>, isCustom?: boolean) => void;
-    onAnalyzeAction: () => void;
     onScrollToBottom: (behavior: 'smooth' | 'auto') => void;
     turnCreationProgress: number;
     turnCreationTimeElapsed: number;
@@ -76,19 +72,15 @@ export const GameFooter = React.memo(({
     areActionsVisible,
     onShowActions,
     isProcessing,
-    isAnalyzing,
     loadingMessage,
     error,
     setError,
     customAction,
     setCustomAction,
-    actionAnalysis,
-    setActionAnalysis,
     onEntityClick,
     onEntityMouseEnter,
     onEntityMouseLeave,
     onAction,
-    onAnalyzeAction,
     onScrollToBottom,
     turnCreationProgress,
     turnCreationTimeElapsed,
@@ -130,7 +122,7 @@ export const GameFooter = React.memo(({
     }, [isProcessing]);
     
      useEffect(() => {
-        if (isProcessing && !isAnalyzing) {
+        if (isProcessing) {
             const currentProgressTenPercentStep = Math.floor(turnCreationProgress / 10);
             const announcedTenPercentStep = Math.floor(announcedProgress / 10);
 
@@ -140,7 +132,7 @@ export const GameFooter = React.memo(({
         } else if (announcedProgress !== 0) {
             setAnnouncedProgress(0);
         }
-    }, [turnCreationProgress, isProcessing, isAnalyzing, announcedProgress]);
+    }, [turnCreationProgress, isProcessing, announcedProgress]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -366,19 +358,11 @@ export const GameFooter = React.memo(({
                             className="custom-action-input"
                             placeholder="Bạn làm gì tiếp theo?"
                             value={customAction}
-                            onChange={(e) => { setCustomAction(e.target.value); setActionAnalysis(null); }}
+                            onChange={(e) => setCustomAction(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleActionClick({ description: customAction }, true)}
                             disabled={isProcessing}
                             aria-label="Nhập hành động tùy chỉnh"
                         />
-                         <button 
-                            className="analyze-button-inline" 
-                            onClick={onAnalyzeAction} 
-                            disabled={!customAction.trim() || isProcessing || gameState.isIntercourseScene || isAnalyzing}
-                            aria-label="Phân tích hành động bằng AI"
-                        >
-                            {isAnalyzing ? <span className="spinner spinner-sm"></span> : '✨'}
-                        </button>
                     </div>
                     <button 
                         className="send-action-button" 
@@ -417,19 +401,6 @@ export const GameFooter = React.memo(({
                         )}
                     </div>
                 </div>
-
-                {actionAnalysis && (
-                    <div className="action-analysis-container" role="status">
-                         <div className="analysis-details">
-                            <strong className="benefit">Lợi:</strong> <InlineStoryRenderer text={actionAnalysis.benefit} gameState={gameState} onEntityClick={onEntityClick} onEntityMouseEnter={onEntityMouseEnter} onEntityMouseLeave={onEntityMouseLeave}/>
-                            <br/>
-                            <strong className="risk">Hại:</strong> <InlineStoryRenderer text={actionAnalysis.risk} gameState={gameState} onEntityClick={onEntityClick} onEntityMouseEnter={onEntityMouseEnter} onEntityMouseLeave={onEntityMouseLeave}/>
-                        </div>
-                        <div className="analysis-potentials">
-                            <ActionPotentials benefit={actionAnalysis.benefitPotential} risk={actionAnalysis.riskPotential} />
-                        </div>
-                    </div>
-                )}
             </div>
 
             {isEffectivelyCollapsed && (
@@ -441,7 +412,7 @@ export const GameFooter = React.memo(({
                 </div>
             )}
 
-            {(isProcessing && !isAnalyzing) && (
+            {isProcessing && (
                 <div className="loading-indicator turn-processing-container" role="status" aria-atomic="false">
                     <div className="turn-processing-progress">
                         <span className="loading-message" aria-hidden="true">{loadingMessage}</span>

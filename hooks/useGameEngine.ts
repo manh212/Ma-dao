@@ -12,7 +12,7 @@ import { GameStateUpdaterService } from '../services/GameStateUpdaterService';
 import { CombatService } from '../services/CombatService';
 import { getApiErrorMessage } from '../utils/error';
 import { stripEntityTags } from '../utils/text';
-import { getTurnSchemaForGenre, ACTION_ANALYSIS_SCHEMA } from '../constants/schemas';
+import { getTurnSchemaForGenre } from '../constants/schemas';
 import { AI_THOUGHT_PROCESS_MESSAGES } from '../constants/loadingConstants';
 import { GEMINI_FLASH } from '../constants/aiConstants';
 import type { GameState, GameAction, Monster, Character, WorldSettings, Recipe } from '../types';
@@ -31,8 +31,6 @@ export const useGameEngine = ({ incrementApiRequestCount, onTurnComplete }: UseG
 
     const [isAITurnProcessing, setIsAITurnProcessing] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState('');
-    const [isAnalyzing, setIsAnalyzing] = useState(false);
-    const [actionAnalysis, setActionAnalysis] = useState<any | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [turnCreationProgress, setTurnCreationProgress] = useState(0);
     const [turnCreationTimeElapsed, setTurnCreationTimeElapsed] = useState(0);
@@ -52,7 +50,7 @@ export const useGameEngine = ({ incrementApiRequestCount, onTurnComplete }: UseG
     const prevIsInCombat = useRef(gameState?.isInCombat);
 
 
-    const isProcessing = isAITurnProcessing || isAnalyzing;
+    const isProcessing = isAITurnProcessing;
 
     const stopLoadingMessageCycle = useCallback(() => {
         if (loadingMessageIntervalRef.current) {
@@ -112,13 +110,12 @@ export const useGameEngine = ({ incrementApiRequestCount, onTurnComplete }: UseG
     }, [worldSettings, stopLoadingMessageCycle]);
 
     const _processAITurn = useCallback(async (action: Partial<GameAction>, isCustom = false, specialContext?: any) => {
-        if (isAITurnProcessing || isAnalyzing) return;
+        if (isAITurnProcessing) return;
 
         setLastAction(action);
         setIsLastActionCustom(isCustom);
         setIsAITurnProcessing(true);
         setError(null);
-        setActionAnalysis(null);
         
         let estimatedDuration = 10;
         if (settings.aiProcessingMode === 'quality') estimatedDuration = 15;
@@ -168,7 +165,7 @@ export const useGameEngine = ({ incrementApiRequestCount, onTurnComplete }: UseG
                 setLoadingMessage('');
             }
         }
-    }, [isAITurnProcessing, isAnalyzing, settings, gameState, worldSettings, onTurnComplete, addToast, incrementApiRequestCount, startLoadingMessageCycle, stopLoadingMessageCycle]);
+    }, [isAITurnProcessing, settings, gameState, worldSettings, onTurnComplete, addToast, incrementApiRequestCount, startLoadingMessageCycle, stopLoadingMessageCycle]);
     
     // Effect to handle AI narration AFTER combat ends
     useEffect(() => {
@@ -247,45 +244,11 @@ export const useGameEngine = ({ incrementApiRequestCount, onTurnComplete }: UseG
         }
     }, [lastAction, isLastActionCustom, submitAction, addToast]);
 
-    const analyzeAction = useCallback(async (customAction: string) => {
-        if (isProcessing || !customAction.trim() || gameState.isIntercourseScene) return;
-        
-        setIsAnalyzing(true);
-        setError(null);
-        setActionAnalysis(null);
-
-        if (settings.enableCheats) {
-            setActionAnalysis({ successChance: 100, benefit: 'Chế độ cheat đang bật...', risk: 'Không có rủi ro...', timeCost: '1 phút', benefitPotential: 100, riskPotential: 0 });
-            setIsAnalyzing(false);
-            return;
-        }
-
-        const analysisPrompt = await PromptBuilderService.buildAnalysisPrompt(
-            gameState,
-            worldSettings,
-            settings,
-            customAction
-        );
-        
-        try {
-            const response = await ApiKeyManager.generateContentWithRetry({ model: GEMINI_FLASH, contents: analysisPrompt, config: { responseMimeType: "application/json", responseSchema: ACTION_ANALYSIS_SCHEMA, }, }, addToast, incrementApiRequestCount);
-            if(isMounted.current) setActionAnalysis(JSON.parse(response.text?.trim() || '{}'));
-        } catch (error) {
-            if(isMounted.current) setError(getApiErrorMessage(error, "phân tích hành động"));
-        } finally {
-            if (isMounted.current) setIsAnalyzing(false);
-        }
-    }, [isProcessing, settings.enableCheats, gameState, worldSettings, addToast, incrementApiRequestCount]);
-
     return {
         submitAction,
-        analyzeAction,
         retryLastAction,
         isProcessing,
-        isAnalyzing,
         loadingMessage,
-        actionAnalysis,
-        setActionAnalysis,
         turnCreationProgress,
         turnCreationTimeElapsed,
         error,

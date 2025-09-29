@@ -21,19 +21,6 @@ export const ACTION_SCHEMA = {
     required: ['id', 'description', 'benefit', 'risk', 'benefitPotential', 'riskPotential']
 };
 
-export const ACTION_ANALYSIS_SCHEMA = {
-    type: Type.OBJECT,
-    properties: {
-        successChance: { type: Type.INTEGER },
-        benefit: { type: Type.STRING },
-        risk: { type: Type.STRING },
-        timeCost: { type: Type.STRING },
-        benefitPotential: { type: Type.INTEGER },
-        riskPotential: { type: Type.INTEGER },
-    },
-    required: ['successChance', 'benefit', 'risk', 'timeCost', 'benefitPotential', 'riskPotential']
-};
-
 export const GAME_TIME_SCHEMA = {
     type: Type.OBJECT,
     properties: {
