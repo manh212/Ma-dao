@@ -13,6 +13,13 @@ export interface ChangelogEntry {
 
 export const CHANGELOG_DATA: ChangelogEntry[] = [
   {
+    version: "v1.7.1",
+    date: "Tháng 8, 2024",
+    changes: [
+      { type: 'improvement', description: "Đơn giản hóa giao diện Cài đặt bằng cách loại bỏ các tùy chọn tùy chỉnh Giao diện. Ứng dụng giờ đây sử dụng một giao diện mặc định, tối ưu để tập trung vào trải nghiệm cốt lõi." },
+    ],
+  },
+  {
     version: "v1.7.0",
     date: "Tháng 8, 2024",
     changes: [

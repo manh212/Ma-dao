@@ -52,7 +52,7 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const backgroundInputRef = useRef<HTMLInputElement>(null);
     const [bgTypeToSet, setBgTypeToSet] = useState<'menu' | 'game' | null>(null);
-    const [activeTab, setActiveTab] = useState('appearance');
+    const [activeTab, setActiveTab] = useState('experience');
 
     const [menuBgUrl, setMenuBgUrl] = useState('');
     const [gameBgUrl, setGameBgUrl] = useState('');
@@ -177,54 +177,6 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
 
     const renderPanel = () => {
         switch(activeTab) {
-            case 'appearance':
-                return (
-                    <div className="settings-panel">
-                        <h4>Giao Diện</h4>
-                        <FormField label="Chủ đề" htmlFor="settings-theme">
-                            <div className="select-wrapper"><select id="settings-theme" name="theme" value={settings.theme} onChange={handleSettingChange}>
-                                <option value="mobile">Di Động (Mobile)</option>
-                                <option value="system">Theo Hệ Thống</option>
-                                <option value="midnight">Midnight (Thanh lịch)</option>
-                                <option value="parchment">Parchment (Ấm áp)</option>
-                                <option value="cyberpunk">Cyberpunk (Neon)</option>
-                                <option value="serenity">Serenity (Dịu mắt)</option>
-                                <option value="solarized-dusk">Solarized Dusk (Ít mỏi mắt)</option>
-                                <option value="evergreen-grove">Evergreen Grove (Thiên nhiên)</option>
-                            </select></div>
-                        </FormField>
-                        {settings.theme === 'mobile' && (
-                             <FormField label="Bảng màu Di động" htmlFor="settings-mobile-palette">
-                                <div className="select-wrapper"><select id="settings-mobile-palette" name="mobilePalette" value={settings.mobilePalette} onChange={handleSettingChange}>
-                                    <option value="default">Mặc định (Dịu mắt)</option>
-                                    <option value="high-contrast">Tương phản cao (Cao)</option>
-                                    <option value="neon">Neon (Sống động)</option>
-                                </select></div>
-                            </FormField>
-                        )}
-                        <FormField label="Font chữ" htmlFor="settings-font-family">
-                            <div className="select-wrapper"><select id="settings-font-family" name="fontFamily" value={settings.fontFamily} onChange={handleSettingChange}><option value="'Be Vietnam Pro', sans-serif">Be Vietnam Pro</option><option value="'Inter', sans-serif">Inter</option><option value="'Roboto', sans-serif">Roboto</option><option value="'Open Sans', sans-serif">Open Sans</option><option value="'Montserrat', sans-serif">Montserrat</option><option value="'Lato', sans-serif">Lato</option><option value="'Source Code Pro', monospace">Source Code Pro</option></select></div>
-                        </FormField>
-                        <FormField label={`Cỡ chữ: ${settings.fontSize}px`} htmlFor="settings-font-size">
-                            <div className="slider-wrapper"><input id="settings-font-size" type="range" name="fontSize" min="12" max="20" step="1" value={settings.fontSize} onChange={handleSettingChange} /></div>
-                        </FormField>
-                         <FormField label={`Giãn dòng: ${Number(settings.lineHeight || 1.7).toFixed(1)}`} htmlFor="settings-line-height">
-                            <div className="slider-wrapper"><input id="settings-line-height" type="range" name="lineHeight" min="1.4" max="2.4" step="0.1" value={settings.lineHeight || 1.7} onChange={handleSettingChange} /></div>
-                        </FormField>
-                        <FormField label={`Độ rộng khung chữ: ${settings.textWidth || 80}ch`} htmlFor="settings-text-width">
-                            <div className="slider-wrapper"><input id="settings-text-width" type="range" name="textWidth" min="50" max="120" step="1" value={settings.textWidth || 80} onChange={handleSettingChange} /></div>
-                        </FormField>
-                        <FormField label="Bảng màu Chữ" htmlFor="settings-text-color">
-                            <div className="select-wrapper"><select id="settings-text-color" name="textColor" value={settings.textColor} onChange={handleSettingChange}>
-                                <option value="default">Mặc định của Chủ đề</option>
-                                <option value="classic">Cổ điển (Classic)</option>
-                                <option value="solarized">Solarized (Dịu mắt)</option>
-                                <option value="nordic">Nordic (Bắc Âu)</option>
-                            </select></div>
-                        </FormField>
-                        <ToggleSwitch id="enablePerformanceEffects" label="Hiệu ứng Nâng cao" description="Bật/tắt các hiệu ứng (aurora, glow) để cải thiện hiệu năng." name="enablePerformanceEffects" checked={settings.enablePerformanceEffects} onChange={handleSettingChange} />
-                    </div>
-                );
             case 'experience':
                 return (
                     <div className="settings-panel">
@@ -305,7 +257,6 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
                     </header>
                     <div className="settings-layout">
                         <nav className="settings-sidebar" aria-label="Menu cài đặt">
-                            <button aria-label="Cài đặt Giao diện" className={`settings-nav-button ${activeTab === 'appearance' ? 'active' : ''}`} onClick={() => setActiveTab('appearance')}><AppearanceIcon/> <span>Giao Diện</span></button>
                             <button aria-label="Cài đặt Trải nghiệm" className={`settings-nav-button ${activeTab === 'experience' ? 'active' : ''}`} onClick={() => setActiveTab('experience')}><ExperienceIcon/> <span>Trải Nghiệm</span></button>
                             {gameState && <button aria-label="Cài đặt Thế giới" className={`settings-nav-button ${activeTab === 'world' ? 'active' : ''}`} onClick={() => setActiveTab('world')}><WorldIcon/> <span>Thế Giới</span></button>}
                             <button aria-label="Cài đặt Ảnh nền" className={`settings-nav-button ${activeTab === 'background' ? 'active' : ''}`} onClick={() => setActiveTab('background')}><BackgroundIcon/> <span>Ảnh Nền</span></button>
