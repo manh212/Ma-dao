@@ -31,7 +31,7 @@ const UnmemoizedDialogueBubble = ({ children, isPlayer, characterId, avatarUrl, 
                 onKeyDown={handleKeyDown}
                 role="button"
                 tabIndex={0}
-                aria-label={`Xem hồ sơ của ${speakerDisplayName}`}
+                aria-label={`Xem hồ sơ của ${speakerDisplayName || 'nhân vật'}`}
             >
                 {avatarUrl ? (
                     <img src={avatarUrl} alt={`Ảnh đại diện của ${speakerDisplayName}`} className="dialogue-avatar-img" />

@@ -105,9 +105,9 @@ const ManualEntryModal = ({ image, onClose, onSave, allCategories }: ManualEntry
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content manual-entry-modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-content manual-entry-modal" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="manual-entry-title">
                 <header className="modal-header">
-                    <h3>Chỉnh Sửa Chi Tiết Ảnh</h3>
+                    <h3 id="manual-entry-title">Chỉnh Sửa Chi Tiết Ảnh</h3>
                     <button onClick={onClose} className="modal-close-button" aria-label="Đóng">×</button>
                 </header>
                 <div className="modal-body manual-entry-body">
@@ -461,12 +461,12 @@ ${JSON.stringify(imageMetadata.slice(0, 200))}
     return (
         <>
             <div className="modal-overlay" onClick={onClose}>
-                <div className="modal-content gallery-modal-content" onClick={e => e.stopPropagation()}>
+                <div className="modal-content gallery-modal-content" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="gallery-modal-title">
                     <header className="modal-header">
                         <button className="lore-button file-action upload-primary" onClick={() => fileInputRef.current?.click()}>
                             + Tải Lên Ảnh Mới
                         </button>
-                        <h3>Thư Viện Ảnh</h3>
+                        <h3 id="gallery-modal-title">Thư Viện Ảnh</h3>
                         <div className="gallery-header-actions">
                              <button 
                                 className="lore-button file-action auto-avatar-btn" 
@@ -515,7 +515,12 @@ ${JSON.stringify(imageMetadata.slice(0, 200))}
                             ) : (
                                 <div className="gallery-grid">
                                     {filteredImages.map((image, index) => (
-                                        <div key={image.id} className="gallery-item" tabIndex={0}>
+                                        <div 
+                                            key={image.id} 
+                                            className="gallery-item" 
+                                            tabIndex={0}
+                                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setViewerIndex(index); } }}
+                                        >
                                             <img src={image.dataUrl} alt={image.name} className="gallery-item-image" onClick={() => setViewerIndex(index)} />
                                             <div className="gallery-item-overlay">
                                                  <div className="gallery-item-actions">

@@ -63,7 +63,14 @@ export const LoadGameModal = ({ saves, onClose, onLoad, onDelete, onUpload, onDo
     };
 
     const renderSaveCard = (save: SaveFile) => (
-        <div key={save.id} className="save-card" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onLoad(save); }}>
+        <div 
+            key={save.id} 
+            className="save-card" 
+            role="button"
+            tabIndex={0} 
+            onClick={() => onLoad(save)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onLoad(save); } }}
+        >
             <div className="save-card-content">
                 {save.slotNumber && <span className="save-card-slot">Slot {save.slotNumber}</span>}
                 <h5 className="save-card-name">{save.name}</h5>
@@ -74,10 +81,10 @@ export const LoadGameModal = ({ saves, onClose, onLoad, onDelete, onUpload, onDo
             </div>
             <div className="save-card-footer">
                 <div className="save-card-actions-secondary">
-                     <button onClick={() => onDownload(save)}>Tải Xuống</button>
-                     <button className="danger" onClick={() => handleDeleteClick(save.id, save.name)}>Xóa</button>
+                     <button onClick={(e) => { e.stopPropagation(); onDownload(save); }}>Tải Xuống</button>
+                     <button className="danger" onClick={(e) => { e.stopPropagation(); handleDeleteClick(save.id, save.name); }}>Xóa</button>
                 </div>
-                <button className="btn-load" onClick={() => onLoad(save)}>Tải Game</button>
+                <button className="btn-load" onClick={(e) => { e.stopPropagation(); onLoad(save); }}>Tải Game</button>
             </div>
         </div>
     );

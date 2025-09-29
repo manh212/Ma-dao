@@ -130,7 +130,7 @@ export const KnowledgeBaseModal = ({ onClose, onEntityClick, onEntityMouseEnter,
     const renderNpcItem = (npc: GameCharacter) => {
         const relInfo = getRelationshipInfo(npc.relationship);
         return (
-            <div key={npc.id} className={`npc-card ${npc.deathState?.isDead ? 'deceased' : ''}`} onClick={() => onNpcSelect(npc.id)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onNpcSelect(npc.id)} role="button" tabIndex={0} aria-label={`Xem hồ sơ của ${npc.displayName}`}>
+            <div key={npc.id} className={`npc-card ${npc.deathState?.isDead ? 'deceased' : ''}`} onClick={() => onNpcSelect(npc.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onNpcSelect(npc.id); } }} role="button" tabIndex={0} aria-label={`Xem hồ sơ của ${npc.displayName}`}>
                 <div className="npc-card-avatar">
                     {npc.avatarUrl ? (
                         <img src={npc.avatarUrl} alt={npc.displayName} />
